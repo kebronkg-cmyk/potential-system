@@ -131,10 +131,13 @@
       : "https://www.google.com/search?q=JaSuVi+Restaurant+Bachbauernstra%C3%9Fe+5+M%C3%BCnchen";
   }
 
-  /* ─────────── Kaiten — rundes Band in der Draufsicht ───────────
-     Der Ring dreht sich um die eigene Achse; jeder Teller wird
-     gegenrotiert, damit Foto und Beschriftung aufrecht bleiben.
-     Der aktive Teller ist der auf der 6-Uhr-Position (unten). */
+  /* ─────────── Kaiten — gekipptes Laufband in Perspektive ───────────
+     .kaiten-world neigt die Bandebene um --tilt. Der Ring dreht sich
+     darin um seine Achse; jeder Teller wird gegenrotiert (Z), damit er
+     aufrecht steht, und um --plate-lift wieder zur Kamera aufgestellt.
+     Die Differenz zu --tilt bleibt als leichte Aufsicht stehen.
+     Der aktive Teller ist der auf der 6-Uhr-Position — vorn, also
+     durch die Perspektive automatisch der größte. */
   const ring = document.getElementById("kaitenRing");
   if (ring) {
     const stage = document.getElementById("kaitenStage");
@@ -163,7 +166,7 @@
 
     function measure() {
       const plateSize = parseFloat(getComputedStyle(stage).getPropertyValue("--plate")) || 140;
-      radius = stage.clientWidth / 2 - plateSize * 0.66;
+      radius = stage.clientWidth / 2 - plateSize * 0.7;
       stage.style.setProperty("--kr", `${radius}px`);
     }
     measure();
@@ -178,7 +181,12 @@
       const front = frontIndex();
       plates.forEach((p, i) => {
         p.classList.toggle("is-front", i === front);
-        p.style.transform = `rotate(${i * stepAngle}deg) translateY(${-radius}px) rotate(${-i * stepAngle - ringAngle}deg)`;
+        // translateZ hebt den Teller vom Band ab, rotateX richtet ihn zur
+        // Kamera auf. Ohne die Hubhöhe würde die Unterkante beim Aufrichten
+        // unter die Bandebene tauchen und dahinter verschwinden.
+        p.style.transform = `rotate(${i * stepAngle}deg) translateY(${-radius}px) ` +
+          `rotate(${-i * stepAngle - ringAngle}deg) ` +
+          `translateZ(var(--plate-rise)) rotateX(calc(-1 * var(--plate-lift)))`;
       });
       const dish = kaitenDishes[front];
       if (!animateCaption || prefersReducedMotion) {
@@ -217,18 +225,22 @@
       ringAngle = Math.round(ringAngle / stepAngle) * stepAngle; // einrasten
       updateKaiten();
     };
+    // Der gedrückte Teller muss hier gemerkt werden: setPointerCapture lenkt
+    // das nachfolgende click-Event auf die Bühne um, dessen target zeigt dann
+    // nicht mehr auf den Teller.
+    let pressedPlate = null;
     stage.addEventListener("pointerdown", (e) => {
-      if (e.target.closest(".kaiten-center")) return; // Buttons im Zentrum nicht als Drag werten
+      pressedPlate = e.target.closest(".kaiten-plate");
       dragStartFn(e.clientX);
       stage.setPointerCapture(e.pointerId);
     });
     stage.addEventListener("pointermove", (e) => dragMove(e.clientX));
     stage.addEventListener("pointerup", dragEnd);
     stage.addEventListener("pointercancel", dragEnd);
-    stage.addEventListener("click", (e) => {
-      if (moved) return;
-      const plate = e.target.closest(".kaiten-plate");
-      if (!plate) return;
+    stage.addEventListener("click", () => {
+      const plate = pressedPlate;
+      pressedPlate = null;
+      if (moved || !plate) return;
       const i = Number(plate.dataset.index);
       // Teller vorne: Großansicht öffnen. Sonst erst nach vorne drehen.
       if (i === frontIndex()) { openLightbox(i); return; }

@@ -122,42 +122,38 @@
 
     <!-- ══════════ Bestellen: zwei Wege ══════════ -->
     <section class="ordering section" id="bestellen">
+      <img class="ordering-bg" src="img/interieur-hanoi.jpg" alt="" aria-hidden="true" loading="lazy" width="1170" height="1156">
+      <span class="ordering-veil" aria-hidden="true"></span>
+
       <div class="ordering-grid">
-        <figure class="ordering-photo reveal-up">
-          <img src="img/interieur-hanoi.jpg" alt="Bildwand mit Motiven aus Hanoi und der Halong-Bucht im JaSuVi" loading="lazy" width="1170" height="1156">
-          <span class="ordering-photo-frame" aria-hidden="true"></span>
-        </figure>
+        <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Bestellen</p>
+        <h2 class="section-title split-lines">
+          <span class="hero-line"><span class="hero-line-inner">Zwei Wege</span></span>
+          <span class="hero-line"><span class="hero-line-inner">zum <em class="accent">Genuss.</em></span></span>
+        </h2>
 
-        <div class="ordering-text">
-          <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Bestellen</p>
-          <h2 class="section-title split-lines">
-            <span class="hero-line"><span class="hero-line-inner">Zwei Wege</span></span>
-            <span class="hero-line"><span class="hero-line-inner">zum <em class="accent">Genuss.</em></span></span>
-          </h2>
-
-          <div class="ordering-ways">
-            <div class="ordering-way reveal-up">
-              <h3>Abholen</h3>
-              <p>Karte zusammenstellen, bei uns in Pasing mitnehmen.</p>
-              <div class="ordering-way-actions">
-                <a class="btn btn-primary" href="speisekarte.html" data-magnetic><span>Karte öffnen</span></a>
-                <a class="partner-link" href="tel:+498992740177">089 9274 0177</a>
-              </div>
+        <div class="ordering-ways">
+          <div class="ordering-way reveal-up">
+            <h3>Abholen</h3>
+            <p>Karte zusammenstellen, bei uns in Pasing mitnehmen.</p>
+            <div class="ordering-way-actions">
+              <a class="btn btn-primary" href="speisekarte.html" data-magnetic><span>Karte öffnen</span></a>
+              <a class="partner-link" href="tel:+498992740177">089 9274 0177</a>
             </div>
+          </div>
 
-            <div class="ordering-way reveal-up">
-              <h3>Liefern lassen</h3>
-              <p>Nach Hause, online bezahlt — über unsere Partner.</p>
-              <div class="ordering-way-actions">
-                <a class="partner-link" href="https://wolt.com/de/deu/munich/restaurant/jasuvi" target="_blank" rel="noopener">
-                  <span>Wolt</span>
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-                </a>
-                <a class="partner-link" href="https://www.lieferando.de/speisekarte/jasuvi" target="_blank" rel="noopener">
-                  <span>Lieferando</span>
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-                </a>
-              </div>
+          <div class="ordering-way reveal-up">
+            <h3>Liefern lassen</h3>
+            <p>Nach Hause, online bezahlt — über unsere Partner.</p>
+            <div class="ordering-way-actions">
+              <a class="partner-link" href="https://wolt.com/de/deu/munich/restaurant/jasuvi" target="_blank" rel="noopener">
+                <span>Wolt</span>
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </a>
+              <a class="partner-link" href="https://www.lieferando.de/speisekarte/jasuvi" target="_blank" rel="noopener">
+                <span>Lieferando</span>
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </a>
             </div>
           </div>
         </div>
@@ -175,12 +171,18 @@
         und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
       </div>
 
-      <div class="kaiten-stage" id="kaitenStage">
-        <div class="kaiten-belt-disc" aria-hidden="true"></div>
-        <div class="kaiten-ring" id="kaitenRing">
-          <div class="kaiten-belt-stripes" aria-hidden="true"></div>
-          <!-- Teller werden per JS eingesetzt -->
+      <div class="kaiten-holder">
+        <div class="kaiten-stage" id="kaitenStage">
+          <div class="kaiten-world">
+            <div class="kaiten-belt-disc" aria-hidden="true"></div>
+            <div class="kaiten-ring" id="kaitenRing">
+              <div class="kaiten-belt-stripes" aria-hidden="true"></div>
+              <!-- Teller werden per JS eingesetzt -->
+            </div>
+          </div>
         </div>
+        <!-- Liegt am Desktop flach über der Bandmitte, am Handy darunter:
+             der Ring lässt dort in der Mitte zu wenig Platz. -->
         <div class="kaiten-center">
           <div class="kaiten-caption" id="kaitenCaption" aria-live="polite">
             <span class="kaiten-caption-name" id="kaitenName">Tiger Roll</span>

@@ -406,63 +406,50 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .philo-card p { color: var(--paper-dim); font-size: 0.97rem; }
 
-/* ═══════════ Bestellen — zwei Wege ═══════════ */
+/* ═══════════ Bestellen — zwei Wege vor der Hanoi-Bildwand ═══════════ */
 .ordering {
   position: relative;
-  background: var(--ink-2);
-  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+  background: var(--ink);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
   overflow: hidden;
+  padding-block: clamp(5rem, 10vw, 8.5rem);
 }
-.ordering::before {
-  content: ""; position: absolute; inset: 0;
-  background-image: var(--seigaiha);
-  background-size: 130px;
-  opacity: 0.05;
-  pointer-events: none;
+.ordering-bg {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 46%;
+  filter: saturate(0.9) contrast(1.02);
+}
+/* Der Schleier hält die Wand als Textur lesbar, ohne sie zu ertränken:
+   oben und unten in den Sektionsrand hinein, links dichter für den Text. */
+.ordering-veil {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(180deg, var(--ink) 0%, rgba(13, 12, 9, 0.7) 16%,
+                    rgba(13, 12, 9, 0.52) 52%, rgba(13, 12, 9, 0.86) 88%, var(--ink) 100%),
+    linear-gradient(90deg, rgba(13, 12, 9, 0.88) 0%, rgba(13, 12, 9, 0.52) 44%,
+                    rgba(13, 12, 9, 0.18) 70%, rgba(13, 12, 9, 0.5) 100%);
 }
 .ordering-grid {
   position: relative;
-  display: grid; gap: clamp(2rem, 5vw, 4rem);
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  align-items: center;
-  max-width: 1280px; margin-inline: auto;
+  max-width: 1180px; margin-inline: auto;
+  padding-inline: clamp(0rem, 1vw, 1rem);
 }
-.ordering-photo {
-  position: relative; margin: 0;
-  border-radius: 26px; overflow: hidden;
-  border: 1px solid var(--line);
-  aspect-ratio: 4 / 5;
-}
-.ordering-photo img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  transition: transform 1.2s var(--ease-out);
-}
-.ordering-photo-frame {
-  position: absolute; inset: 12px;
-  border: 1px solid rgba(224, 189, 107, 0.28);
-  border-radius: 18px;
-  pointer-events: none;
-}
-.ordering-photo::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(13, 12, 9, 0) 45%, rgba(13, 12, 9, 0.62) 100%);
-  pointer-events: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  .ordering-photo:hover img { transform: scale(1.05); }
-}
-.ordering-text .section-title { margin-top: 0.4rem; }
+.ordering-grid .section-eyebrow { justify-content: flex-start; }
+.ordering-grid .section-title { margin-top: 0.4rem; }
 
 /* Zwei Wege — ohne Kästen, nur eine feine Trennlinie */
 .ordering-ways {
-  display: grid; gap: clamp(1.8rem, 4vw, 3.2rem);
+  display: grid; gap: clamp(1.8rem, 4vw, 3.5rem);
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  margin-top: clamp(2rem, 4.5vw, 3rem);
+  max-width: 760px;
+  margin-top: clamp(2.2rem, 5vw, 3.4rem);
 }
 .ordering-way {
   display: flex; flex-direction: column;
   padding-top: 1.2rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(233, 207, 143, 0.3);
   transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
 }
 .ordering-way h3 {
@@ -473,6 +460,7 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .ordering-way p {
   color: var(--paper-dim); font-size: 0.93rem; line-height: 1.6;
   max-width: 30ch;
+  text-shadow: 0 1px 12px rgba(13, 12, 9, 0.8);
 }
 .ordering-way-actions {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem;
@@ -505,179 +493,180 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .pickup-note a:hover { color: var(--gold-bright); border-color: var(--gold); }
 
-/* ═══════════ Kaiten — rundes Band in der Draufsicht ═══════════ */
+/* ═══════════ Kaiten — gekipptes Laufband in Perspektive ═══════════ */
 .kaiten {
   position: relative;
-  background: radial-gradient(90% 70% at 50% 40%, #1c1912 0%, var(--ink) 72%);
+  background: radial-gradient(85% 65% at 50% 44%, #1b1811 0%, var(--ink) 74%);
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
   overflow: hidden;
 }
-.kaiten .section-head { margin-inline: auto; text-align: center; margin-bottom: clamp(1.4rem, 3vw, 2.2rem); }
+.kaiten .section-head { margin-inline: auto; text-align: center; margin-bottom: clamp(1.8rem, 4vw, 3rem); }
 .kaiten .section-sub { margin-inline: auto; }
 .kaiten .section-eyebrow { justify-content: center; }
 
+/* Die Bühne ist flach; erst .kaiten-world legt das Band in die Tiefe.
+   Dadurch bleiben Beschriftung und Bedienung gestochen scharf. */
+.kaiten-holder { position: relative; width: max-content; margin-inline: auto; }
 .kaiten-stage {
-  --plate: clamp(104px, 17vw, 162px);
+  --stage-w: min(92vw, 740px);
+  --plate: clamp(116px, 19vw, 178px);
+  --tilt: 52deg;          /* Neigung der Bandebene */
+  --plate-lift: 39deg;    /* Teller werden wieder aufgerichtet — 13° bleiben stehen */
+  --plate-rise: calc(var(--plate) * 0.4); /* Standhöhe über dem Band, sonst
+                             taucht die Unterkante beim Aufrichten hinein */
   position: relative;
-  width: min(90vw, 570px);
-  aspect-ratio: 1;
+  width: var(--stage-w);
+  height: calc(var(--stage-w) * 0.84);
   margin-inline: auto;
+  perspective: 2000px;
+  perspective-origin: 50% 40%;
   cursor: grab; user-select: none; touch-action: pan-y;
 }
 .kaiten-stage.is-dragging { cursor: grabbing; }
 
-/* Band-Grundfläche: dunkles Laufband mit doppelter Goldkante */
+.kaiten-world {
+  position: absolute; left: 0; top: 50%;
+  width: 100%; aspect-ratio: 1;
+  transform: translateY(-50%) rotateX(var(--tilt));
+  transform-style: preserve-3d;
+}
+
+/* Bandfläche: dunkler Lauf mit zwei gebürsteten Goldschienen */
 .kaiten-belt-disc {
   position: absolute; inset: 0;
   border-radius: 50%;
   background:
     radial-gradient(circle,
-      transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.66),
-      rgba(224, 189, 107, 0.55) calc(var(--kr, 240px) - var(--plate) * 0.66) calc(var(--kr, 240px) - var(--plate) * 0.66 + 1.5px),
-      rgba(224, 189, 107, 0.12) calc(var(--kr, 240px) - var(--plate) * 0.66 + 1.5px) calc(var(--kr, 240px) - var(--plate) * 0.66 + 5px),
-      #16130d calc(var(--kr, 240px) - var(--plate) * 0.66 + 5px) calc(var(--kr, 240px) + var(--plate) * 0.66 - 5px),
-      rgba(224, 189, 107, 0.12) calc(var(--kr, 240px) + var(--plate) * 0.66 - 5px) calc(var(--kr, 240px) + var(--plate) * 0.66 - 1.5px),
-      rgba(224, 189, 107, 0.55) calc(var(--kr, 240px) + var(--plate) * 0.66 - 1.5px) calc(var(--kr, 240px) + var(--plate) * 0.66),
-      transparent calc(var(--kr, 240px) + var(--plate) * 0.66));
-  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.6);
+      transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.7),
+      rgba(224, 189, 107, 0.6) calc(var(--kr, 240px) - var(--plate) * 0.7) calc(var(--kr, 240px) - var(--plate) * 0.7 + 2px),
+      rgba(224, 189, 107, 0.14) calc(var(--kr, 240px) - var(--plate) * 0.7 + 2px) calc(var(--kr, 240px) - var(--plate) * 0.7 + 7px),
+      #151209 calc(var(--kr, 240px) - var(--plate) * 0.7 + 7px) calc(var(--kr, 240px) + var(--plate) * 0.7 - 7px),
+      rgba(224, 189, 107, 0.14) calc(var(--kr, 240px) + var(--plate) * 0.7 - 7px) calc(var(--kr, 240px) + var(--plate) * 0.7 - 2px),
+      rgba(224, 189, 107, 0.6) calc(var(--kr, 240px) + var(--plate) * 0.7 - 2px) calc(var(--kr, 240px) + var(--plate) * 0.7),
+      transparent calc(var(--kr, 240px) + var(--plate) * 0.7));
+  box-shadow: inset 0 0 110px rgba(0, 0, 0, 0.72);
 }
-/* Glanzlicht, das über das Band wandert */
-.kaiten-belt-disc::after {
-  content: ""; position: absolute; inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg,
-    transparent 0deg, rgba(247, 227, 171, 0.16) 26deg, transparent 62deg,
-    transparent 180deg, rgba(247, 227, 171, 0.1) 208deg, transparent 244deg);
-  -webkit-mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.66),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.66) calc(var(--kr, 240px) + var(--plate) * 0.66),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.66));
-  mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.66),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.66) calc(var(--kr, 240px) + var(--plate) * 0.66),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.66));
-  animation: belt-sheen 14s linear infinite;
-}
-@keyframes belt-sheen { to { transform: rotate(360deg); } }
 
-/* Rotierender Ring: Rillen + Teller */
+/* Rotierender Ring: Bandsegmente + Teller */
 .kaiten-ring {
   position: absolute; inset: 0;
-  z-index: 2; /* eigener Stacking-Context durch rotate() — muss über dem Zentrum liegen */
+  transform-style: preserve-3d;
   transition: transform 0.9s var(--ease-out);
 }
 .kaiten-ring.no-anim, .kaiten-ring.no-anim .kaiten-plate { transition: none; }
 .kaiten-belt-stripes {
   position: absolute; inset: 0;
   border-radius: 50%;
-  background: repeating-conic-gradient(rgba(224, 189, 107, 0.09) 0deg 1.6deg, transparent 1.6deg 7deg);
+  background: repeating-conic-gradient(rgba(224, 189, 107, 0.055) 0deg 0.35deg, transparent 0.35deg 9deg);
   -webkit-mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.6),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.6) calc(var(--kr, 240px) + var(--plate) * 0.6),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.6));
+    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.62),
+    #000 calc(var(--kr, 240px) - var(--plate) * 0.62) calc(var(--kr, 240px) + var(--plate) * 0.62),
+    transparent calc(var(--kr, 240px) + var(--plate) * 0.62));
   mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.6),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.6) calc(var(--kr, 240px) + var(--plate) * 0.6),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.6));
+    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.62),
+    #000 calc(var(--kr, 240px) - var(--plate) * 0.62) calc(var(--kr, 240px) + var(--plate) * 0.62),
+    transparent calc(var(--kr, 240px) + var(--plate) * 0.62));
 }
+
+/* Teller stehen auf dem Band, aber fast aufgerichtet zur Kamera.
+   Die Perspektive erledigt die Größenstaffelung: vorn groß, hinten klein. */
 .kaiten-plate {
   position: absolute; top: 50%; left: 50%;
-  z-index: 2;
   width: var(--plate);
   margin: calc(var(--plate) / -2) 0 0 calc(var(--plate) / -2);
+  transform-style: preserve-3d;
   transition: transform 0.9s var(--ease-out);
 }
+/* Kontaktschatten: liegt flach auf dem Band unter dem Teller. Die
+   Transformation dreht die Hebung und Aufrichtung wieder zurück,
+   damit der Fleck in der Bandebene bleibt. */
+.kaiten-plate::after {
+  content: "";
+  position: absolute; left: 50%; top: calc(var(--plate) / 2);
+  width: 96%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.38) 44%, rgba(0, 0, 0, 0) 76%);
+  transform: translate(-50%, -50%) rotateX(var(--plate-lift))
+             translateZ(calc(-1 * var(--plate-rise)));
+  pointer-events: none;
+}
+
 .plate-photo {
   position: relative; display: block;
   width: 100%; aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+  background: #0d0c09;
+  box-shadow: 0 26px 44px -14px rgba(0, 0, 0, 0.85);
   pointer-events: none;
   transition: box-shadow 0.55s ease, transform 0.6s var(--ease-out);
 }
 .plate-photo img {
   width: 100%; height: 100%; object-fit: cover; display: block;
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
-/* Goldener Doppelrand plus Porzellan-Glanz */
+/* Porzellanrand: schmal, damit möglichst viel vom Essen zu sehen ist */
 .plate-rim {
   position: absolute; inset: 0;
   border-radius: 50%;
-  border: 2px solid rgba(224, 189, 107, 0.85);
+  border: 1.5px solid rgba(224, 189, 107, 0.7);
   box-shadow:
-    inset 0 0 0 5px rgba(13, 12, 9, 0.95),
-    inset 0 0 0 7px rgba(247, 227, 171, 0.5),
-    inset 0 -24px 40px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(13, 12, 9, 0.9);
+    inset 0 0 0 3px rgba(13, 12, 9, 0.92),
+    inset 0 0 0 4.5px rgba(224, 189, 107, 0.4),
+    inset 0 -30px 44px -18px rgba(0, 0, 0, 0.55);
 }
-.plate-rim::after {
-  content: ""; position: absolute; inset: 7px;
-  border-radius: 50%;
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.22) 0%, transparent 42%);
-  pointer-events: none;
-}
-.kaiten-plate.is-front { z-index: 5; }
 .kaiten-plate.is-front .plate-photo {
-  transform: scale(1.2);
-  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.7), 0 0 60px rgba(224, 189, 107, 0.38);
+  transform: scale(1.07);
+  box-shadow: 0 34px 52px -16px rgba(0, 0, 0, 0.9);
 }
 .kaiten-plate.is-front .plate-rim {
   border-color: var(--gold-bright);
   box-shadow:
-    inset 0 0 0 5px rgba(13, 12, 9, 0.95),
-    inset 0 0 0 7px var(--gold),
-    inset 0 -24px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(13, 12, 9, 0.9);
+    inset 0 0 0 3px rgba(13, 12, 9, 0.92),
+    inset 0 0 0 4.5px var(--gold),
+    inset 0 -30px 44px -18px rgba(0, 0, 0, 0.5);
 }
 .kaiten-plate .plate-tag {
   display: block; text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 0.55rem;
   font-family: var(--font-jp);
-  font-size: 0.78rem; letter-spacing: 0.16em;
+  font-size: 0.76rem; letter-spacing: 0.16em;
   color: var(--paper-faint);
   white-space: nowrap;
   pointer-events: none;
-  transition: color 0.4s ease, opacity 0.4s ease;
+  transition: color 0.4s ease;
 }
 .kaiten-plate.is-front .plate-tag { color: var(--gold-bright); }
 
-/* Zentrum des Karussells */
+/* Beschriftung liegt flach über der Bandmitte — außerhalb der 3D-Ebene */
 .kaiten-center {
-  position: absolute; top: 50%; left: 50%;
-  z-index: 1; /* hinter den Tellern, damit der Verlauf sie nicht anschneidet */
-  width: calc(100% - var(--plate) * 2.5);
-  aspect-ratio: 1;
+  position: absolute; top: 44%; left: 50%;
+  z-index: 1;
+  width: calc(100% - var(--plate) * 2.9);
   transform: translate(-50%, -50%);
   display: grid; place-content: center;
-  padding: 6%;
   text-align: center;
-  border-radius: 50%;
-  background: radial-gradient(circle, #1a170f 0 68%, rgba(26, 23, 15, 0.82) 84%, rgba(26, 23, 15, 0) 97%);
   pointer-events: none;
-}
-.kaiten-center::before {
-  content: ""; position: absolute; inset: 12%;
-  border-radius: 50%;
-  border: 1px solid rgba(224, 189, 107, 0.22);
 }
 .kaiten-caption { max-width: 100%; }
 .kaiten-caption-name {
   display: block;
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.1rem, 2.3vw, 1.65rem);
+  font-size: clamp(1.2rem, 2.6vw, 1.9rem);
   color: var(--paper);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
-  line-height: 1.24;
+  text-shadow: 0 2px 20px rgba(13, 12, 9, 0.95), 0 0 40px rgba(13, 12, 9, 0.8);
+  line-height: 1.22;
   text-wrap: balance;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .kaiten-caption-price {
-  display: block; margin-top: 0.25rem;
+  display: block; margin-top: 0.3rem;
   font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1rem, 1.9vw, 1.3rem);
+  font-size: clamp(1rem, 2vw, 1.35rem);
   color: var(--gold); letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 18px rgba(13, 12, 9, 0.95);
   transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
 }
 .kaiten-caption.is-switching .kaiten-caption-name,
@@ -700,8 +689,22 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .kaiten-arrow:active { transform: scale(0.9); }
 
 @media (max-width: 760px) {
-  .kaiten-stage { --plate: clamp(86px, 25vw, 128px); width: min(94vw, 430px); }
-  .kaiten-center { width: calc(100% - var(--plate) * 2.4); }
+  .kaiten-stage {
+    /* Schmaler und mit flacherer Perspektive: sonst vergrößert die Nähe
+       den vorderen Bandrand über die Bildschirmkante hinaus. */
+    --stage-w: min(88vw, 420px);
+    --plate: clamp(74px, 21vw, 108px);
+    --plate-rise: calc(var(--plate) * 0.36);
+    --tilt: 46deg; --plate-lift: 35deg;
+    height: calc(var(--stage-w) * 0.84);
+    perspective: 1600px;
+  }
+  .kaiten-center {
+    position: static;
+    width: auto; max-width: 88vw;
+    margin: 0.2rem auto 0;
+    transform: none;
+  }
   .plate-tag { display: none !important; } /* Name steht mittig — Tags würden kollidieren */
   .kaiten-controls { gap: 0.7rem; }
   .kaiten-controls .btn { padding: 0.72rem 1.1rem; font-size: 0.82rem; }
@@ -1482,9 +1485,14 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   pointer-events: none;
 }
 
-@media (max-width: 980px) {
-  .ordering-grid { grid-template-columns: 1fr; }
-  .ordering-photo { aspect-ratio: 16 / 11; max-height: 340px; }
+@media (max-width: 900px) {
+  /* Schmaler Schirm: der seitliche Verlauf träfe genau den Text —
+     stattdessen gleichmäßig abdunkeln und die Wand seitlich anschneiden. */
+  .ordering-bg { object-position: 64% 46%; }
+  .ordering-veil {
+    background: linear-gradient(180deg, var(--ink) 0%, rgba(13, 12, 9, 0.82) 13%,
+                rgba(13, 12, 9, 0.74) 55%, rgba(13, 12, 9, 0.9) 88%, var(--ink) 100%);
+  }
 }
 
 /* ═══════════ Responsive ═══════════ */
