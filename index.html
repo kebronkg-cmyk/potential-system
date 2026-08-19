@@ -167,38 +167,38 @@
         <h2 class="section-title split-lines">
           <span class="hero-line"><span class="hero-line-inner">Das <em class="accent">Kaiten</em>-Band</span></span>
         </h2>
-        <p class="section-sub reveal-up">Unsere beliebtesten Gerichte drehen ihre Runden. Ziehen Sie das Band
+        <p class="section-sub reveal-up">Unsere beliebtesten Gerichte ziehen an Ihnen vorbei. Ziehen Sie das Band
         und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
       </div>
 
-      <div class="kaiten-holder">
-        <div class="kaiten-stage" id="kaitenStage">
-          <div class="kaiten-world">
-            <div class="kaiten-belt-disc" aria-hidden="true"></div>
-            <div class="kaiten-ring" id="kaitenRing">
-              <div class="kaiten-belt-stripes" aria-hidden="true"></div>
-              <!-- Teller werden per JS eingesetzt -->
-            </div>
-          </div>
+      <div class="kaiten-stage" id="kaitenStage">
+        <!-- Band zuerst: so liegen die Teller darauf und ihre Aufsetzschatten
+             fallen sichtbar auf die Latten. -->
+        <div class="kaiten-belt" aria-hidden="true">
+          <span class="kaiten-belt-slats"></span>
+          <span class="kaiten-belt-sheen"></span>
         </div>
-        <!-- Liegt am Desktop flach über der Bandmitte, am Handy darunter:
-             der Ring lässt dort in der Mitte zu wenig Platz. -->
-        <div class="kaiten-center">
-          <div class="kaiten-caption" id="kaitenCaption" aria-live="polite">
-            <span class="kaiten-caption-name" id="kaitenName">Tiger Roll</span>
-            <span class="kaiten-caption-price" id="kaitenPrice">16,50 €</span>
-          </div>
+        <div class="kaiten-scene">
+          <div class="kaiten-ring" id="kaitenRing"><!-- Teller werden per JS eingesetzt --></div>
         </div>
       </div>
 
       <div class="kaiten-controls">
         <button class="kaiten-arrow" id="kaitenPrev" data-magnetic aria-label="Band zurückdrehen">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
         </button>
-        <button class="btn btn-primary" id="kaitenAdd" data-magnetic><span>Auf die Bestellkarte legen</span></button>
+        <div class="kaiten-caption" id="kaitenCaption" aria-live="polite">
+          <span class="kaiten-caption-tag" id="kaitenTag">タイガー</span>
+          <span class="kaiten-caption-name" id="kaitenName">Tiger Roll</span>
+          <span class="kaiten-caption-price" id="kaitenPrice">16,50 €</span>
+        </div>
         <button class="kaiten-arrow" id="kaitenNext" data-magnetic aria-label="Band weiterdrehen">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         </button>
+      </div>
+
+      <div class="kaiten-add-wrap">
+        <button class="btn btn-primary" id="kaitenAdd" data-magnetic><span>Auf die Bestellkarte legen</span></button>
       </div>
 
       <p class="pickup-note reveal-up">Vom Band und aus der <a href="speisekarte.html">Karte</a> zur

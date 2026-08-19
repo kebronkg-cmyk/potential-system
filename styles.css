@@ -493,112 +493,97 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .pickup-note a:hover { color: var(--gold-bright); border-color: var(--gold); }
 
-/* ═══════════ Kaiten — gekipptes Laufband in Perspektive ═══════════ */
+/* ═══════════ Kaiten — Karussell über einem laufenden Band ═══════════ */
 .kaiten {
   position: relative;
-  background: radial-gradient(85% 65% at 50% 44%, #1b1811 0%, var(--ink) 74%);
+  background: radial-gradient(80% 62% at 50% 46%, #1a1710 0%, var(--ink) 76%);
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
   overflow: hidden;
 }
-.kaiten .section-head { margin-inline: auto; text-align: center; margin-bottom: clamp(1.8rem, 4vw, 3rem); }
+.kaiten .section-head { margin-inline: auto; text-align: center; margin-bottom: clamp(1.4rem, 3vw, 2.2rem); }
 .kaiten .section-sub { margin-inline: auto; }
 .kaiten .section-eyebrow { justify-content: center; }
 
-/* Die Bühne ist flach; erst .kaiten-world legt das Band in die Tiefe.
-   Dadurch bleiben Beschriftung und Bedienung gestochen scharf. */
-.kaiten-holder { position: relative; width: max-content; margin-inline: auto; }
 .kaiten-stage {
-  --stage-w: min(92vw, 740px);
-  --plate: clamp(116px, 19vw, 178px);
-  --tilt: 52deg;          /* Neigung der Bandebene */
-  --plate-lift: 39deg;    /* Teller werden wieder aufgerichtet — 13° bleiben stehen */
-  --plate-rise: calc(var(--plate) * 0.4); /* Standhöhe über dem Band, sonst
-                             taucht die Unterkante beim Aufrichten hinein */
+  --plate: clamp(132px, 15vw, 186px);
   position: relative;
-  width: var(--stage-w);
-  height: calc(var(--stage-w) * 0.84);
-  margin-inline: auto;
-  perspective: 2000px;
-  perspective-origin: 50% 40%;
+  height: clamp(310px, 33vw, 410px);
+  display: grid; place-items: center;
+  perspective: 1400px;
   cursor: grab; user-select: none; touch-action: pan-y;
 }
 .kaiten-stage.is-dragging { cursor: grabbing; }
 
-.kaiten-world {
-  position: absolute; left: 0; top: 50%;
-  width: 100%; aspect-ratio: 1;
-  transform: translateY(-50%) rotateX(var(--tilt));
-  transform-style: preserve-3d;
-}
-
-/* Bandfläche: dunkler Lauf mit zwei gebürsteten Goldschienen */
-.kaiten-belt-disc {
-  position: absolute; inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle,
-      transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.7),
-      rgba(224, 189, 107, 0.6) calc(var(--kr, 240px) - var(--plate) * 0.7) calc(var(--kr, 240px) - var(--plate) * 0.7 + 2px),
-      rgba(224, 189, 107, 0.14) calc(var(--kr, 240px) - var(--plate) * 0.7 + 2px) calc(var(--kr, 240px) - var(--plate) * 0.7 + 7px),
-      #151209 calc(var(--kr, 240px) - var(--plate) * 0.7 + 7px) calc(var(--kr, 240px) + var(--plate) * 0.7 - 7px),
-      rgba(224, 189, 107, 0.14) calc(var(--kr, 240px) + var(--plate) * 0.7 - 7px) calc(var(--kr, 240px) + var(--plate) * 0.7 - 2px),
-      rgba(224, 189, 107, 0.6) calc(var(--kr, 240px) + var(--plate) * 0.7 - 2px) calc(var(--kr, 240px) + var(--plate) * 0.7),
-      transparent calc(var(--kr, 240px) + var(--plate) * 0.7));
-  box-shadow: inset 0 0 110px rgba(0, 0, 0, 0.72);
-}
-
-/* Rotierender Ring: Bandsegmente + Teller */
+/* Leichte Aufsicht: der vordere Teller rückt nach unten aufs Band,
+   die hinteren steigen und treten damit sichtbar zurück. */
+.kaiten-scene { transform-style: preserve-3d; transform: rotateX(-9deg); }
 .kaiten-ring {
-  position: absolute; inset: 0;
+  position: relative; width: 0; height: 0;
   transform-style: preserve-3d;
   transition: transform 0.9s var(--ease-out);
 }
-.kaiten-ring.no-anim, .kaiten-ring.no-anim .kaiten-plate { transition: none; }
-.kaiten-belt-stripes {
-  position: absolute; inset: 0;
-  border-radius: 50%;
-  background: repeating-conic-gradient(rgba(224, 189, 107, 0.055) 0deg 0.35deg, transparent 0.35deg 9deg);
-  -webkit-mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.62),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.62) calc(var(--kr, 240px) + var(--plate) * 0.62),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.62));
-  mask: radial-gradient(circle,
-    transparent 0 calc(var(--kr, 240px) - var(--plate) * 0.62),
-    #000 calc(var(--kr, 240px) - var(--plate) * 0.62) calc(var(--kr, 240px) + var(--plate) * 0.62),
-    transparent calc(var(--kr, 240px) + var(--plate) * 0.62));
-}
+.kaiten-ring.no-anim { transition: none; }
 
-/* Teller stehen auf dem Band, aber fast aufgerichtet zur Kamera.
-   Die Perspektive erledigt die Größenstaffelung: vorn groß, hinten klein. */
+/* ── Das Band: gerade Strecke in Untersicht, echte Latten, laufend ── */
+.kaiten-belt {
+  position: absolute; left: 50%; bottom: 7%;
+  width: min(900px, 100%); height: clamp(112px, 12vw, 158px);
+  transform: translateX(-50%) perspective(520px) rotateX(64deg);
+  transform-origin: 50% 100%;
+  background: linear-gradient(180deg, #050403 0%, #0f0d09 18%, #131009 56%, #080705 100%);
+  overflow: hidden;
+  /* Enden ausblenden, damit die Strecke weiterläuft statt abzubrechen */
+  -webkit-mask: linear-gradient(90deg, transparent 0, #000 13%, #000 87%, transparent 100%);
+  mask: linear-gradient(90deg, transparent 0, #000 13%, #000 87%, transparent 100%);
+}
+/* Latten: Fuge, angeschrägte Vorderkante, Lattenrücken, Schattenkante.
+   Der Versatz je Durchlauf entspricht exakt der Musterbreite (34px). */
+.kaiten-belt-slats {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 200%;
+  background: repeating-linear-gradient(90deg,
+    #050403 0 2px,
+    #241f16 2px 5px,
+    #191510 5px 13px,
+    #15120c 13px 30px,
+    #0c0a07 30px 34px);
+  animation: belt-run 2.1s linear infinite;
+}
+@keyframes belt-run { to { transform: translateX(-34px); } }
+/* Beleuchtung quer zur Laufrichtung: vordere Kante fängt das Licht */
+.kaiten-belt-sheen {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.15) 16%, rgba(0, 0, 0, 0) 34%),
+    linear-gradient(0deg, rgba(247, 227, 171, 0.1) 0%, rgba(247, 227, 171, 0.02) 14%, transparent 42%),
+    radial-gradient(120% 80% at 50% 112%, rgba(224, 189, 107, 0.08), transparent 58%);
+}
+/* Führungsschienen aus gebürstetem Gold an beiden Kanten */
+.kaiten-belt::before,
+.kaiten-belt::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent 0,
+    rgba(224, 189, 107, 0.45) 16%, rgba(247, 227, 171, 0.72) 50%,
+    rgba(224, 189, 107, 0.45) 84%, transparent 100%);
+}
+.kaiten-belt::before { top: 0; height: 2px; opacity: 0.3; }
+.kaiten-belt::after { bottom: 0; height: 4px; opacity: 0.8; }
+
+/* ── Teller: rundes Foto im Porzellanrand, immer zur Kamera ── */
 .kaiten-plate {
-  position: absolute; top: 50%; left: 50%;
+  position: absolute; top: 0; left: 0;
   width: var(--plate);
   margin: calc(var(--plate) / -2) 0 0 calc(var(--plate) / -2);
+  text-align: center;
   transform-style: preserve-3d;
-  transition: transform 0.9s var(--ease-out);
+  transition: opacity 0.55s ease, filter 0.55s ease;
 }
-/* Kontaktschatten: liegt flach auf dem Band unter dem Teller. Die
-   Transformation dreht die Hebung und Aufrichtung wieder zurück,
-   damit der Fleck in der Bandebene bleibt. */
-.kaiten-plate::after {
-  content: "";
-  position: absolute; left: 50%; top: calc(var(--plate) / 2);
-  width: 96%; aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side,
-    rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.38) 44%, rgba(0, 0, 0, 0) 76%);
-  transform: translate(-50%, -50%) rotateX(var(--plate-lift))
-             translateZ(calc(-1 * var(--plate-rise)));
-  pointer-events: none;
-}
-
 .plate-photo {
   position: relative; display: block;
   width: 100%; aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
   background: #0d0c09;
-  box-shadow: 0 26px 44px -14px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 22px 34px -12px rgba(0, 0, 0, 0.85);
   pointer-events: none;
   transition: box-shadow 0.55s ease, transform 0.6s var(--ease-out);
 }
@@ -606,7 +591,7 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   width: 100%; height: 100%; object-fit: cover; display: block;
   transform: scale(1.03);
 }
-/* Porzellanrand: schmal, damit möglichst viel vom Essen zu sehen ist */
+/* Schmaler Porzellanrand — möglichst viel Fläche bleibt dem Essen */
 .plate-rim {
   position: absolute; inset: 0;
   border-radius: 50%;
@@ -614,68 +599,68 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   box-shadow:
     inset 0 0 0 3px rgba(13, 12, 9, 0.92),
     inset 0 0 0 4.5px rgba(224, 189, 107, 0.4),
-    inset 0 -30px 44px -18px rgba(0, 0, 0, 0.55);
+    inset 0 -28px 40px -18px rgba(0, 0, 0, 0.5);
 }
+/* Aufsetzschatten auf dem Band */
+.plate-shadow {
+  position: absolute; left: 50%; top: calc(var(--plate) * 0.93);
+  width: 80%; height: calc(var(--plate) * 0.19);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.32) 52%, rgba(0, 0, 0, 0) 80%);
+  pointer-events: none;
+}
+.kaiten-plate.is-front { z-index: 5; }
 .kaiten-plate.is-front .plate-photo {
-  transform: scale(1.07);
-  box-shadow: 0 34px 52px -16px rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
+  box-shadow: 0 30px 44px -14px rgba(0, 0, 0, 0.9);
 }
 .kaiten-plate.is-front .plate-rim {
   border-color: var(--gold-bright);
   box-shadow:
     inset 0 0 0 3px rgba(13, 12, 9, 0.92),
     inset 0 0 0 4.5px var(--gold),
-    inset 0 -30px 44px -18px rgba(0, 0, 0, 0.5);
+    inset 0 -28px 40px -18px rgba(0, 0, 0, 0.45);
 }
-.kaiten-plate .plate-tag {
-  display: block; text-align: center;
-  margin-top: 0.55rem;
+/* Tiefenschärfe: was hinten läuft, tritt zurück statt zu überlagern */
+.kaiten-plate.is-back { opacity: 0.32; filter: blur(2.5px) saturate(0.65); }
+.kaiten-caption { min-width: min(320px, 58vw); text-align: center; }
+.kaiten-caption-tag {
+  display: block;
   font-family: var(--font-jp);
-  font-size: 0.76rem; letter-spacing: 0.16em;
+  font-size: 0.74rem; letter-spacing: 0.24em;
   color: var(--paper-faint);
-  white-space: nowrap;
-  pointer-events: none;
-  transition: color 0.4s ease;
+  margin-bottom: 0.3rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.kaiten-plate.is-front .plate-tag { color: var(--gold-bright); }
-
-/* Beschriftung liegt flach über der Bandmitte — außerhalb der 3D-Ebene */
-.kaiten-center {
-  position: absolute; top: 44%; left: 50%;
-  z-index: 1;
-  width: calc(100% - var(--plate) * 2.9);
-  transform: translate(-50%, -50%);
-  display: grid; place-content: center;
-  text-align: center;
-  pointer-events: none;
-}
-.kaiten-caption { max-width: 100%; }
 .kaiten-caption-name {
   display: block;
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.2rem, 2.6vw, 1.9rem);
+  font-size: clamp(1.15rem, 2.3vw, 1.6rem);
   color: var(--paper);
-  text-shadow: 0 2px 20px rgba(13, 12, 9, 0.95), 0 0 40px rgba(13, 12, 9, 0.8);
-  line-height: 1.22;
+  line-height: 1.24;
   text-wrap: balance;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .kaiten-caption-price {
-  display: block; margin-top: 0.3rem;
+  display: block; margin-top: 0.2rem;
   font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-size: clamp(0.98rem, 1.8vw, 1.25rem);
   color: var(--gold); letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 18px rgba(13, 12, 9, 0.95);
   transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
 }
+.kaiten-caption.is-switching .kaiten-caption-tag,
 .kaiten-caption.is-switching .kaiten-caption-name,
 .kaiten-caption.is-switching .kaiten-caption-price { opacity: 0; transform: translateY(8px); }
 
+.kaiten-add-wrap { display: grid; place-items: center; margin-top: 1.4rem; }
+
 .kaiten-controls {
   display: flex; align-items: center; justify-content: center;
-  gap: clamp(0.8rem, 3vw, 1.6rem);
-  margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
+  gap: clamp(0.9rem, 4vw, 2.2rem);
+  margin-top: clamp(1.4rem, 3vw, 2rem);
 }
 .kaiten-arrow {
   display: grid; place-items: center;
@@ -690,22 +675,12 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 
 @media (max-width: 760px) {
   .kaiten-stage {
-    /* Schmaler und mit flacherer Perspektive: sonst vergrößert die Nähe
-       den vorderen Bandrand über die Bildschirmkante hinaus. */
-    --stage-w: min(88vw, 420px);
-    --plate: clamp(74px, 21vw, 108px);
-    --plate-rise: calc(var(--plate) * 0.36);
-    --tilt: 46deg; --plate-lift: 35deg;
-    height: calc(var(--stage-w) * 0.84);
-    perspective: 1600px;
+    --plate: clamp(104px, 27vw, 132px);
+    height: clamp(258px, 68vw, 320px);
+    perspective: 900px;
   }
-  .kaiten-center {
-    position: static;
-    width: auto; max-width: 88vw;
-    margin: 0.2rem auto 0;
-    transform: none;
-  }
-  .plate-tag { display: none !important; } /* Name steht mittig — Tags würden kollidieren */
+  .kaiten-belt { width: 132%; height: clamp(76px, 21vw, 108px); }
+  .kaiten-caption { min-width: 0; flex: 1; }
   .kaiten-controls { gap: 0.7rem; }
   .kaiten-controls .btn { padding: 0.72rem 1.1rem; font-size: 0.82rem; }
   .kaiten-arrow { width: 44px; height: 44px; }
