@@ -477,84 +477,58 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   .ordering-photo:hover img { transform: scale(1.05); }
 }
 .ordering-text .section-title { margin-top: 0.4rem; }
-.ordering-cards {
-  display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  margin-top: clamp(1.8rem, 4vw, 2.6rem);
+
+/* Zwei Wege — ohne Kästen, nur eine feine Trennlinie */
+.ordering-ways {
+  display: grid; gap: clamp(1.8rem, 4vw, 3.2rem);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  margin-top: clamp(2rem, 4.5vw, 3rem);
 }
-.ordering-card {
-  position: relative;
+.ordering-way {
   display: flex; flex-direction: column;
-  padding: 1.9rem 1.7rem 1.7rem;
-  border: 1px solid var(--line); border-radius: 22px;
-  background: linear-gradient(160deg, var(--ink-3), var(--ink));
-  transition: border-color 0.4s ease, opacity 0.9s var(--ease-out),
-              transform 0.9s var(--ease-out);
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
 }
-.ordering-card:hover { border-color: rgba(224, 189, 107, 0.42); }
-.ordering-card-primary {
-  border-color: rgba(224, 189, 107, 0.4);
-  background:
-    radial-gradient(120% 90% at 0% 0%, rgba(224, 189, 107, 0.12), transparent 60%),
-    linear-gradient(160deg, var(--ink-3), var(--ink));
-}
-.ordering-card-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 46px; height: 46px; margin-bottom: 1.1rem;
-  border-radius: 50%;
-  border: 1px solid rgba(224, 189, 107, 0.36);
-  color: var(--gold);
-  background: rgba(224, 189, 107, 0.08);
-}
-.ordering-card h3 {
+.ordering-way h3 {
   font-family: var(--font-display); font-weight: 600;
-  font-size: 1.28rem; margin-bottom: 0.6rem;
+  font-size: 1.22rem; letter-spacing: 0.01em;
+  margin-bottom: 0.45rem;
 }
-.ordering-card p {
-  color: var(--paper-dim); font-size: 0.95rem; line-height: 1.65;
+.ordering-way p {
+  color: var(--paper-dim); font-size: 0.93rem; line-height: 1.6;
+  max-width: 30ch;
 }
-.ordering-card-actions {
-  display: flex; flex-wrap: wrap; gap: 0.6rem;
-  margin-top: auto; padding-top: 1.4rem;
-}
-.partner-links {
-  display: flex; flex-wrap: wrap; gap: 0.5rem;
+.ordering-way-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem;
   margin-top: auto; padding-top: 1.4rem;
 }
 .partner-link {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.62rem 0.95rem;
-  border: 1px solid var(--line); border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 0.4rem;
   color: var(--paper-dim); text-decoration: none;
-  font-size: 0.86rem; font-weight: 500;
-  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  font-size: 0.92rem; font-weight: 500;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(224, 189, 107, 0.32);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
-.partner-link svg { flex: none; opacity: 0.7; }
-.partner-link:hover {
-  color: var(--gold-bright);
-  border-color: rgba(224, 189, 107, 0.5);
-  background: rgba(224, 189, 107, 0.09);
-}
-.partner-link:active { transform: scale(0.97); }
+.partner-link svg { flex: none; opacity: 0.65; }
+.partner-link:hover { color: var(--gold-bright); border-color: var(--gold); }
 
-/* Abholhinweis — dezente Zeile unter Band und Karte */
+/* Abholhinweis — eine Zeile, kein Kasten */
 .pickup-note {
-  display: flex; align-items: center; justify-content: center;
-  flex-wrap: wrap; gap: 0.55rem;
-  margin: clamp(1.6rem, 4vw, 2.4rem) auto 0;
-  padding: 0.72rem 1.25rem;
-  max-width: max-content;
-  border: 1px solid var(--line); border-radius: 999px;
-  background: rgba(224, 189, 107, 0.05);
-  color: var(--paper-dim);
-  font-size: 0.88rem; line-height: 1.5;
+  margin: clamp(1.6rem, 4vw, 2.2rem) auto 0;
+  max-width: 52ch;
+  color: var(--paper-faint);
+  font-size: 0.88rem; line-height: 1.6;
   text-align: center;
 }
-.pickup-note svg { flex: none; color: var(--gold); }
-.pickup-note strong { color: var(--gold-bright); font-weight: 600; }
-.pickup-note a { color: var(--paper-dim); text-decoration: underline;
-  text-decoration-color: rgba(224, 189, 107, 0.4); text-underline-offset: 3px; }
-.pickup-note a:hover { color: var(--gold-bright); }
+.pickup-note strong { color: var(--gold); font-weight: 600; }
+.pickup-note a {
+  color: var(--paper-dim); text-decoration: none;
+  border-bottom: 1px solid rgba(224, 189, 107, 0.3);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.pickup-note a:hover { color: var(--gold-bright); border-color: var(--gold); }
 
 /* ═══════════ Kaiten — rundes Band in der Draufsicht ═══════════ */
 .kaiten {
@@ -1434,20 +1408,23 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 
 /* Zurück zum Navigator */
 .to-top {
-  position: fixed; right: clamp(1rem, 3vw, 2rem); bottom: clamp(1rem, 3vw, 2rem);
+  position: fixed; right: clamp(1rem, 3vw, 2.2rem); bottom: clamp(1rem, 3vw, 2.2rem);
   z-index: 90;
-  display: flex; align-items: center; gap: 0.45rem;
-  padding: 0.7rem 1.05rem;
-  border: 1px solid var(--gold); border-radius: 999px;
-  background: linear-gradient(160deg, var(--gold-bright), var(--gold) 55%, var(--gold-deep));
-  color: var(--on-gold); font-size: 0.85rem; font-weight: 600;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-  opacity: 0; transform: translateY(14px) scale(0.96);
+  display: grid; place-items: center;
+  width: 46px; height: 46px; padding: 0;
+  border: 1px solid rgba(224, 189, 107, 0.4); border-radius: 50%;
+  background: rgba(21, 19, 14, 0.82);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  color: var(--gold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  opacity: 0; transform: translateY(10px);
   pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s var(--ease-out);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out),
+              border-color 0.3s ease, color 0.3s ease;
 }
-.to-top.is-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-.to-top:active { transform: scale(0.95); }
+.to-top.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.to-top:hover { border-color: var(--gold); color: var(--gold-bright); }
+.to-top:active { transform: scale(0.92); }
 
 .card-note { margin: 0 auto; max-width: 1000px; padding: 0 clamp(1.2rem, 5vw, 5rem) 4rem; }
 

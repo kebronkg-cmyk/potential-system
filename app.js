@@ -434,17 +434,16 @@
     });
     renderCourse("lunch");
 
-    // Zurück-zum-Navigator-Pfeil
+    // Pfeil nach oben — führt an den Seitenanfang, nicht nur zum
+    // Navigator. Von dort ist die Gang-Auswahl ohnehin sofort sichtbar.
     const toTop = document.getElementById("toTop");
     if (toTop) {
       toTop.addEventListener("click", () => {
         courseNav.classList.remove("is-tucked");
-        window.scrollTo({ top: Math.max(0, navDocTop() - 90), behavior: prefersReducedMotion ? "auto" : "smooth" });
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
       });
-      // Der Navigator klebt oben; der Pfeil bringt einen zusätzlich
-      // aus tieferen Gängen in einem Sprung zurück nach oben.
       // Navigator weicht beim Runterscrollen aus dem Weg und kommt
-      // beim Hochscrollen sofort zurück; der Pfeil führt direkt hin.
+      // beim Hochscrollen sofort zurück.
       let navLastY = window.scrollY;
       const onScroll = () => {
         const y = window.scrollY;
