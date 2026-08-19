@@ -90,28 +90,39 @@
     });
   }
 
-  /* ─────────── Hero-Diashow + Tilt ─────────── */
-  const heroFrame = document.getElementById("heroPlate");
-  if (heroFrame) {
-    const slides = [...heroFrame.querySelectorAll(".hero-slide")];
+  /* ─────────── Hero-Diashow (vollflächig) ─────────── */
+  const heroStage = document.querySelector(".hero-stage");
+  if (heroStage) {
+    const slides = [...heroStage.querySelectorAll(".hero-slide")];
     if (slides.length > 1 && !prefersReducedMotion) {
       let current = 0;
       setInterval(() => {
         slides[current].classList.remove("is-active");
         current = (current + 1) % slides.length;
         slides[current].classList.add("is-active");
-      }, 5200);
+      }, 6000);
     }
-    if (!prefersReducedMotion && finePointer) {
-      const hero = document.getElementById("hero");
-      hero.addEventListener("mousemove", (e) => {
-        const r = hero.getBoundingClientRect();
-        const nx = (e.clientX - r.left) / r.width - 0.5;
-        const ny = (e.clientY - r.top) / r.height - 0.5;
-        heroFrame.style.transform = `rotateY(${nx * 8}deg) rotateX(${-ny * 6}deg)`;
-      });
-      hero.addEventListener("mouseleave", () => { heroFrame.style.transform = ""; });
-    }
+  }
+
+  /* ─────────── Google-Bewertung ───────────
+     Statisch gepflegte Werte (Stand: 08/2026). Sind in der Seite ein
+     Google-Places-Schlüssel und eine Place-ID hinterlegt, werden Schnitt
+     und Anzahl live nachgeladen — sonst bleiben die gepflegten Werte stehen. */
+  const ratingCfg = window.JASUVI_GOOGLE || {};
+  if (ratingCfg.apiKey && ratingCfg.placeId) {
+    fetch(`https://places.googleapis.com/v1/places/${ratingCfg.placeId}?fields=rating,userRatingCount&key=${ratingCfg.apiKey}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((d) => {
+        if (!d.rating) return;
+        const value = d.rating.toFixed(1).replace(".", ",");
+        document.querySelectorAll("#ratingValue, #heroRatingValue").forEach((el) => { el.textContent = value; });
+        document.querySelectorAll("#ratingCount, #heroRatingCount").forEach((el) => { el.textContent = d.userRatingCount; });
+      })
+      .catch(() => { /* gepflegte Werte bleiben stehen */ });
+  }
+  if (ratingCfg.placeId) {
+    const write = document.getElementById("reviewWriteLink");
+    if (write) write.href = `https://search.google.com/local/writereview?placeid=${ratingCfg.placeId}`;
   }
 
   /* ─────────── Kaiten — rundes Band in der Draufsicht ───────────
@@ -146,7 +157,7 @@
 
     function measure() {
       const plateSize = parseFloat(getComputedStyle(stage).getPropertyValue("--plate")) || 140;
-      radius = stage.clientWidth / 2 - plateSize * 0.62;
+      radius = stage.clientWidth / 2 - plateSize * 0.66;
       stage.style.setProperty("--kr", `${radius}px`);
     }
     measure();

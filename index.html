@@ -35,6 +35,7 @@
       <a href="#kaiten" class="nav-link" data-magnetic>Kaiten</a>
       <a href="speisekarte.html" class="nav-link" data-magnetic>Speisekarte</a>
       <a href="#galerie" class="nav-link" data-magnetic>Galerie</a>
+      <a href="#bewertungen" class="nav-link" data-magnetic>Bewertungen</a>
       <a href="#philosophie" class="nav-link" data-magnetic>Über uns</a>
       <a href="#kontakt" class="nav-link" data-magnetic>Kontakt</a>
     </nav>
@@ -52,13 +53,19 @@
 
     <!-- ══════════ Hero ══════════ -->
     <section class="hero" id="hero">
-      <div class="hero-bg" aria-hidden="true">
-        <span class="hero-kanji hero-kanji-1">鮨</span>
-        <span class="hero-kanji hero-kanji-2">味</span>
-        <div class="hero-sun"></div>
+      <!-- Vollflächige Foto-Bühne: die Bilder wechseln, das Design liegt darüber -->
+      <div class="hero-stage" aria-hidden="true">
+        <img class="hero-slide is-active" src="img/bg-hero.jpg" alt="" fetchpriority="high">
+        <img class="hero-slide" src="img/sushi-3.jpg" alt="" loading="lazy">
+        <img class="hero-slide" src="img/hero.jpg" alt="" loading="lazy">
+        <img class="hero-slide" src="img/sushi-4.jpg" alt="" loading="lazy">
+        <span class="hero-veil"></span>
+        <span class="hero-seigaiha"></span>
+        <span class="hero-glow"></span>
       </div>
 
       <div class="hero-content">
+        <img class="hero-logo" src="img/logo-hero.png" alt="JaSuVi" width="731" height="400">
         <p class="hero-eyebrow reveal-up"><span class="eyebrow-dot"></span>Japanische Küche &amp; Asian Fusion · München-Pasing</p>
         <h1 class="hero-title">
           <span class="hero-line"><span class="hero-line-inner">Sushi mit</span></span>
@@ -77,18 +84,10 @@
           </a>
           <a href="#kaiten" class="btn btn-ghost" data-magnetic><span>Zum Kaiten-Band</span></a>
         </div>
-      </div>
-
-      <div class="hero-photo-wrap" aria-hidden="true">
-        <span class="hero-seigaiha" aria-hidden="true"></span>
-        <figure class="hero-photo" id="heroPlate">
-          <img class="hero-slide is-active" src="img/hero.jpg" alt="" width="1200" height="1060" fetchpriority="high">
-          <img class="hero-slide" src="img/sushi-2.jpg" alt="" width="1024" height="1024" loading="lazy">
-          <img class="hero-slide" src="img/sushi-3.jpg" alt="" width="1024" height="1024" loading="lazy">
-          <img class="hero-slide" src="img/restaurant-schild.jpg" alt="" width="1100" height="1100" loading="lazy">
-          <span class="hero-photo-ring"></span>
-        </figure>
-        <div class="hero-photo-shadow"></div>
+        <a class="hero-rating reveal-up" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi+Bachbauernstra%C3%9Fe+5+81241+M%C3%BCnchen" target="_blank" rel="noopener">
+          <span class="stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="hero-rating-text"><strong id="heroRatingValue">4,8</strong> auf Google · <span id="heroRatingCount">98</span> Bewertungen</span>
+        </a>
       </div>
 
       <a class="scroll-hint" href="#kaiten" aria-label="Weiter scrollen">
@@ -111,8 +110,8 @@
         <h2 class="section-title split-lines">
           <span class="hero-line"><span class="hero-line-inner">Das <em class="accent">Kaiten</em>-Band</span></span>
         </h2>
-        <p class="section-sub reveal-up">Wie im Kaiten-Sushi-Restaurant zieht das Band unsere Empfehlungen an Ihnen
-        vorbei. Ziehen Sie das Band mit der Maus oder dem Finger und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
+        <p class="section-sub reveal-up">Unsere beliebtesten Gerichte drehen ihre Runden. Ziehen Sie das Band
+        und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
       </div>
 
       <div class="kaiten-stage" id="kaitenStage">
@@ -170,6 +169,27 @@
           <img src="img/sushi-4.jpg" alt="Garnelen-Sushi auf blauem Teller" loading="lazy" width="907" height="907">
           <figcaption>Ebi — Garnelen-Sushi</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ Google-Bewertungen ══════════ -->
+    <section class="rating-band" id="bewertungen">
+      <span class="rating-mountains" aria-hidden="true"></span>
+      <div class="rating-inner">
+        <div class="rating-score reveal-up">
+          <span class="rating-value" id="ratingValue">4,8</span>
+          <span class="stars stars-lg" id="ratingStars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="rating-meta">aus <span id="ratingCount">98</span> Google-Bewertungen</span>
+        </div>
+        <div class="rating-text reveal-up">
+          <h2>Unsere Gäste sagen es am besten.</h2>
+          <p>Gelobt werden vor allem Geschmack, Frische und Qualität — besonders das Sushi — sowie das
+          aufmerksame Team. Lesen Sie alle Bewertungen direkt bei Google.</p>
+          <div class="rating-actions">
+            <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi+Bachbauernstra%C3%9Fe+5+81241+M%C3%BCnchen" target="_blank" rel="noopener" data-magnetic><span>Bewertungen ansehen</span></a>
+            <a class="btn btn-ghost" href="https://search.google.com/local/writereview?placeid=" target="_blank" rel="noopener" data-magnetic id="reviewWriteLink"><span>Bewertung schreiben</span></a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -331,6 +351,13 @@
     </footer>
   </aside>
 
+  <!-- Live-Google-Bewertung (optional):
+       Tragen Sie hier einen Google-Places-API-Schlüssel (auf diese Domain beschränkt!)
+       und die Place-ID des Restaurants ein — dann werden Schnitt und Anzahl live
+       geladen. Ohne Eintrag bleiben die gepflegten Werte im HTML stehen. -->
+  <script>
+    window.JASUVI_GOOGLE = { apiKey: "", placeId: "" };
+  </script>
   <script src="menu-data.js"></script>
   <script src="app.js"></script>
 </body>
