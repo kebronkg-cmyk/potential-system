@@ -28,6 +28,13 @@
       <a href="index.html#philosophie" class="nav-link" data-magnetic>Über uns</a>
       <a href="index.html#kontakt" class="nav-link" data-magnetic>Kontakt</a>
     </nav>
+    <div class="header-actions">
+    <a class="header-phone" href="tel:+498992740177" data-magnetic aria-label="Anrufen: 089 9274 0177">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.6 3.5h3l1.5 3.8-1.9 1.1a12 12 0 0 0 5.4 5.4l1.1-1.9 3.8 1.5v3a1.6 1.6 0 0 1-1.7 1.6A16.5 16.5 0 0 1 5 6.2 1.6 1.6 0 0 1 6.6 3.5Z"/>
+      </svg>
+      <span>089 9274 0177</span>
+    </a>
     <button class="cart-toggle" id="cartToggle" data-magnetic aria-label="Bestellkarte öffnen">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4 7Z"/>
@@ -36,6 +43,7 @@
       <span class="cart-label">Bestellkarte</span>
       <span class="cart-count" id="cartCount">0</span>
     </button>
+    </div>
   </header>
 
   <main>
@@ -51,6 +59,9 @@
     </section>
 
     <!-- ══════════ Gang-Navigator (chronologisch) ══════════ -->
+    <!-- Fester Anker: sticky-Elemente melden beim Scrollen ihre Klebeposition,
+         nicht ihre Layout-Position — dieser Punkt bleibt stabil. -->
+    <span class="course-anchor" id="courseAnchor" aria-hidden="true"></span>
     <nav class="course-nav" id="courseNav" aria-label="Gänge">
       <div class="course-nav-inner" id="courseNavInner"><!-- per JS gerendert --></div>
     </nav>

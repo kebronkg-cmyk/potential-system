@@ -7,7 +7,7 @@
 window.JASUVI_MENU = {
 
   lunch: [
-    { title: "Vorspeisen", note: "Lunch täglich 11:30 – 14:45 (außer Sonntag)", items: [
+    { title: "Vorspeisen", note: "Montag bis Freitag 11:30 – 14:45 Uhr · Samstag 12:00 – 14:45 Uhr · Sonntag Ruhetag", items: [
       { id: "lv1", name: "Minifrühlingsrollen (5 Stk.)", desc: "", price: 3.5, veg: true },
       { id: "lv2", name: "Edamame", desc: "Gedämpfte Sojabohnen", price: 5.5, veg: true },
       { id: "lv3", name: "Nem Saigon", desc: "Hausgemachte vietnamesische Frühlingsrollen mit Hähnchen, Glasnudeln & Gemüse, Nuoc-Mam-Pha-Sauce", price: 5.5 },

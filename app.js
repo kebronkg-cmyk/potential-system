@@ -69,8 +69,10 @@
     const y = window.scrollY;
     if (!isStaticHeader) header.classList.toggle("is-scrolled", y > 40);
     const cartOpen = cartEl ? cartEl.classList.contains("is-open") : false;
-    header.classList.toggle("is-hidden", y > lastY && y > 300 && !cartOpen);
-    lastY = y;
+    if (y <= 300 || cartOpen) header.classList.remove("is-hidden");
+    else if (y > lastY + 6) header.classList.add("is-hidden");
+    else if (y < lastY - 6) header.classList.remove("is-hidden");
+    if (Math.abs(y - lastY) > 6) lastY = y;
   }, { passive: true });
 
   /* ─────────── Magnetic Buttons ─────────── */
@@ -120,9 +122,13 @@
       })
       .catch(() => { /* gepflegte Werte bleiben stehen */ });
   }
-  if (ratingCfg.placeId) {
-    const write = document.getElementById("reviewWriteLink");
-    if (write) write.href = `https://search.google.com/local/writereview?placeid=${ratingCfg.placeId}`;
+  const writeLink = document.getElementById("reviewWriteLink");
+  if (writeLink) {
+    // Ohne Place-ID führt der Weg über die Google-Suche zum Eintrag,
+    // dort ist "Rezension schreiben" einen Klick entfernt.
+    writeLink.href = ratingCfg.placeId
+      ? `https://search.google.com/local/writereview?placeid=${ratingCfg.placeId}`
+      : "https://www.google.com/search?q=JaSuVi+Restaurant+Bachbauernstra%C3%9Fe+5+M%C3%BCnchen";
   }
 
   /* ─────────── Kaiten — rundes Band in der Draufsicht ───────────
@@ -325,11 +331,11 @@
   const courseStage = document.getElementById("courseStage");
   if (courseStage) {
     const courses = [
-      { key: "lunch", time: "11:30 – 14:45", title: "Mittagstisch", sub: "Unsere Lunch-Karte, werktags bis 14:45 Uhr", icon: "sun" },
-      { key: "vorspeisen", time: "Zum Auftakt", title: "Vorspeisen, Suppen & Salate", sub: "Kleine Gerichte zum Ankommen", icon: "bowl" },
-      { key: "sushi", time: "Erster Gang", title: "Sushi & Sashimi", sub: "Nigiri, Sashimi, Maki, Inside-Out und Bowls", icon: "fish" },
+      { key: "lunch", time: "Mo – Fr 11:30 – 14:45", title: "Mittagstisch", sub: "Montag bis Freitag 11:30 – 14:45 Uhr · Samstag ab 12:00 Uhr · Sonntag Ruhetag", icon: "sun" },
+      { key: "sushi", time: "Unsere Spezialität", title: "Sushi & Sashimi", sub: "Nigiri, Sashimi, Maki, Inside-Out und Bowls", icon: "fish" },
       { key: "rolls", time: "Das Aushängeschild", title: "Signature Rolls & Platten", sub: "Crunchy Rolls, Special Rolls und Platten zum Teilen", icon: "star" },
-      { key: "hauptgerichte", time: "Hauptgang", title: "Aus dem Wok", title2: true, sub: "Huhn, Rind, Ente, Lachs, Garnelen und Tofu", icon: "flame" },
+      { key: "vorspeisen", time: "Zum Auftakt", title: "Vorspeisen, Suppen & Salate", sub: "Kleine Gerichte zum Ankommen", icon: "bowl" },
+      { key: "hauptgerichte", time: "Hauptgang", title: "Aus dem Wok", sub: "Huhn, Rind, Ente, Lachs, Garnelen und Tofu", icon: "flame" },
       { key: "nudeln", time: "Hauptgang", title: "Nudeln & Reis", sub: "Phở, Bún, Udon, Ramen und gebratener Reis", icon: "noodle" },
       { key: "dessert", time: "Zum Abschluss", title: "Dessert", sub: "Süßes aus Japan und Vietnam", icon: "sweet" },
       { key: "getraenke", time: "Den ganzen Abend", title: "Getränke", sub: "Softdrinks, Tee, Bier, Cocktails und Wein", icon: "glass" }
@@ -376,6 +382,7 @@
       const groups = menuData[key];
       const wrap = document.createElement("div");
       wrap.className = "course-groups";
+      const frag = document.createDocumentFragment();
       groups.forEach((group, gi) => {
         const det = document.createElement("details");
         det.className = "course-group";
@@ -383,11 +390,13 @@
         det.style.animationDelay = `${Math.min(gi * 0.05, 0.3)}s`;
         const list = document.createElement("div");
         list.className = "menu-list";
+        const itemFrag = document.createDocumentFragment();
         const delayRef = { v: 0 };
         group.items.forEach((item) => {
-          list.appendChild(itemRow(item, delayRef.v));
-          delayRef.v = Math.min(delayRef.v + 0.035, 0.4);
+          itemFrag.appendChild(itemRow(item, delayRef.v));
+          delayRef.v = Math.min(delayRef.v + 0.03, 0.32);
         });
+        list.appendChild(itemFrag);
         det.innerHTML = `
           <summary>
             <span class="course-group-title">${group.title}</span>
@@ -401,21 +410,27 @@
           det.appendChild(note);
         }
         det.appendChild(list);
-        wrap.appendChild(det);
+        frag.appendChild(det);
       });
+      wrap.appendChild(frag);
       sec.appendChild(wrap);
-      courseStage.appendChild(sec);
+      courseStage.replaceChildren(sec);
     }
+
+    // Dokumentposition des Navigators. Sticky-Elemente melden beim Scrollen
+    // ihre Klebeposition — auch über offsetTop. Der feste Anker davor nicht.
+    const courseAnchor = document.getElementById("courseAnchor");
+    const navDocTop = () => (courseAnchor ? courseAnchor.offsetTop : courseNav.offsetTop);
 
     navInner.addEventListener("click", (e) => {
       const chip = e.target.closest(".course-chip");
       if (!chip) return;
       navInner.querySelectorAll(".course-chip").forEach((c) => c.classList.remove("is-active"));
       chip.classList.add("is-active");
-      renderCourse(chip.dataset.course);
-      const navTop = courseNav.getBoundingClientRect().top + window.scrollY - 70;
-      if (window.scrollY > navTop) window.scrollTo({ top: navTop, behavior: prefersReducedMotion ? "auto" : "smooth" });
-      chip.scrollIntoView({ inline: "center", block: "nearest", behavior: prefersReducedMotion ? "auto" : "smooth" });
+      // Erst scrollen (sofortiges Feedback), dann im nächsten Frame rendern
+      const target = Math.max(0, navDocTop() - 90);
+      if (window.scrollY > target) window.scrollTo({ top: target, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      requestAnimationFrame(() => renderCourse(chip.dataset.course));
     });
     renderCourse("lunch");
 
@@ -423,16 +438,31 @@
     const toTop = document.getElementById("toTop");
     if (toTop) {
       toTop.addEventListener("click", () => {
-        const navTop = courseNav.getBoundingClientRect().top + window.scrollY - 70;
-        window.scrollTo({ top: navTop, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        courseNav.classList.remove("is-tucked");
+        window.scrollTo({ top: Math.max(0, navDocTop() - 90), behavior: prefersReducedMotion ? "auto" : "smooth" });
       });
       // Der Navigator klebt oben; der Pfeil bringt einen zusätzlich
       // aus tieferen Gängen in einem Sprung zurück nach oben.
-      const toggleToTop = () => {
-        toTop.classList.toggle("is-visible", window.scrollY > 900);
+      // Navigator weicht beim Runterscrollen aus dem Weg und kommt
+      // beim Hochscrollen sofort zurück; der Pfeil führt direkt hin.
+      let navLastY = window.scrollY;
+      const onScroll = () => {
+        const y = window.scrollY;
+        const past = y > navDocTop() + 40;
+        // Hysterese: nur bei deutlicher Bewegung umschalten. Sanftes
+        // Auslaufen liefert Deltas von 1–2 px und würde sonst flackern.
+        if (!past) {
+          courseNav.classList.remove("is-tucked");
+        } else if (y > navLastY + 6) {
+          courseNav.classList.add("is-tucked");
+        } else if (y < navLastY - 6) {
+          courseNav.classList.remove("is-tucked");
+        }
+        toTop.classList.toggle("is-visible", y > navDocTop() + 400);
+        if (Math.abs(y - navLastY) > 6) navLastY = y;
       };
-      window.addEventListener("scroll", toggleToTop, { passive: true });
-      toggleToTop();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
     }
   }
 

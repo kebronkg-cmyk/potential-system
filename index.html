@@ -39,6 +39,13 @@
       <a href="#philosophie" class="nav-link" data-magnetic>Über uns</a>
       <a href="#kontakt" class="nav-link" data-magnetic>Kontakt</a>
     </nav>
+    <div class="header-actions">
+    <a class="header-phone" href="tel:+498992740177" data-magnetic aria-label="Anrufen: 089 9274 0177">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.6 3.5h3l1.5 3.8-1.9 1.1a12 12 0 0 0 5.4 5.4l1.1-1.9 3.8 1.5v3a1.6 1.6 0 0 1-1.7 1.6A16.5 16.5 0 0 1 5 6.2 1.6 1.6 0 0 1 6.6 3.5Z"/>
+      </svg>
+      <span>089 9274 0177</span>
+    </a>
     <button class="cart-toggle" id="cartToggle" data-magnetic aria-label="Bestellkarte öffnen">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4 7Z"/>
@@ -47,6 +54,7 @@
       <span class="cart-label">Bestellkarte</span>
       <span class="cart-count" id="cartCount">0</span>
     </button>
+    </div>
   </header>
 
   <main id="top">
@@ -84,10 +92,23 @@
           </a>
           <a href="#kaiten" class="btn btn-ghost" data-magnetic><span>Zum Kaiten-Band</span></a>
         </div>
-        <a class="hero-rating reveal-up" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi+Bachbauernstra%C3%9Fe+5+81241+M%C3%BCnchen" target="_blank" rel="noopener">
-          <span class="stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="hero-rating-text"><strong id="heroRatingValue">4,8</strong> auf Google · <span id="heroRatingCount">98</span> Bewertungen</span>
-        </a>
+        <div class="hero-meta reveal-up">
+          <a class="hero-phone" href="tel:+498992740177" data-magnetic>
+            <span class="hero-phone-ring" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6.6 3.5h3l1.5 3.8-1.9 1.1a12 12 0 0 0 5.4 5.4l1.1-1.9 3.8 1.5v3a1.6 1.6 0 0 1-1.7 1.6A16.5 16.5 0 0 1 5 6.2 1.6 1.6 0 0 1 6.6 3.5Z"/>
+              </svg>
+            </span>
+            <span class="hero-phone-text">
+              <span class="hero-phone-label">Bestellen &amp; reservieren</span>
+              <span class="hero-phone-number">089 9274 0177</span>
+            </span>
+          </a>
+          <a class="hero-rating" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi%20Restaurant%20Bachbauernstra%C3%9Fe%205%2081241%20M%C3%BCnchen" target="_blank" rel="noopener">
+            <span class="stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="hero-rating-text"><strong id="heroRatingValue">4,8</strong> auf Google · <span id="heroRatingCount">98</span> Bewertungen</span>
+          </a>
+        </div>
       </div>
 
       <a class="scroll-hint" href="#kaiten" aria-label="Weiter scrollen">
@@ -186,8 +207,8 @@
           <p>Gelobt werden vor allem Geschmack, Frische und Qualität — besonders das Sushi — sowie das
           aufmerksame Team. Lesen Sie alle Bewertungen direkt bei Google.</p>
           <div class="rating-actions">
-            <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi+Bachbauernstra%C3%9Fe+5+81241+M%C3%BCnchen" target="_blank" rel="noopener" data-magnetic><span>Bewertungen ansehen</span></a>
-            <a class="btn btn-ghost" href="https://search.google.com/local/writereview?placeid=" target="_blank" rel="noopener" data-magnetic id="reviewWriteLink"><span>Bewertung schreiben</span></a>
+            <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=JaSuVi%20Restaurant%20Bachbauernstra%C3%9Fe%205%2081241%20M%C3%BCnchen" target="_blank" rel="noopener" data-magnetic><span>Bewertungen ansehen</span></a>
+            <a class="btn btn-ghost" href="https://www.google.com/search?q=JaSuVi+Restaurant+Bachbauernstra%C3%9Fe+5+M%C3%BCnchen" target="_blank" rel="noopener" data-magnetic id="reviewWriteLink"><span>Bewertung schreiben</span></a>
           </div>
         </div>
       </div>
