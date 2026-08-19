@@ -1,31 +1,32 @@
 /* ═══════════════════════════════════════════════════════════
    JaSuVi — Interaktion & Motion
+   Speisekartendaten: menu-data.js (window.JASUVI_MENU)
    ═══════════════════════════════════════════════════════════ */
 (() => {
   "use strict";
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(pointer: fine)").matches;
   const fmt = (n) => n.toFixed(2).replace(".", ",") + " €";
+  const menuData = window.JASUVI_MENU;
 
-  /* ─────────── Daten ─────────── */
-
-  // SVG-Baukasten für die Kaiten-Teller
+  /* ─────────── Kaiten-Teller (SVG-Baukasten) ─────────── */
   const plateArt = {
     roll: (fill) => `
       <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231e"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#33302a"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#454138" stroke-width="2"/>
+        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
+        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
+        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
         <g>
-          <g transform="translate(56 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120f"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
-          <g transform="translate(100 76)"><ellipse cx="0" cy="16" rx="26" ry="10" fill="#111"/><circle r="26" fill="#15120f"/><circle r="20" fill="#f3ecdc"/><circle r="9" fill="${fill}"/></g>
-          <g transform="translate(144 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120f"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
+          <g transform="translate(56 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120c"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
+          <g transform="translate(100 76)"><ellipse cx="0" cy="16" rx="26" ry="10" fill="#111"/><circle r="26" fill="#15120c"/><circle r="20" fill="#f3ecdc"/><circle r="9" fill="${fill}"/></g>
+          <g transform="translate(144 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120c"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
         </g>`,
     nigiri: (fill) => `
       <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231e"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#33302a"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#454138" stroke-width="2"/>
+        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
+        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
+        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
         <g transform="translate(64 84) rotate(-8)">
           <ellipse cx="0" cy="12" rx="34" ry="15" fill="#f3ecdc"/>
           <path d="M-38 2 Q0 -20 38 2 Q20 12 0 10 Q-20 12 -38 2Z" fill="${fill}"/>
@@ -37,9 +38,9 @@
         </g>`,
     bowl: (fill) => `
       <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="116" rx="80" ry="24" fill="#26231e"/>
-        <path d="M30 78 Q100 150 170 78 Z" fill="#3b332b"/>
-        <path d="M30 78 Q100 150 170 78" fill="none" stroke="#514639" stroke-width="3"/>
+        <ellipse cx="100" cy="116" rx="80" ry="24" fill="#26231b"/>
+        <path d="M30 78 Q100 150 170 78 Z" fill="#3b3527"/>
+        <path d="M30 78 Q100 150 170 78" fill="none" stroke="#514936" stroke-width="3"/>
         <ellipse cx="100" cy="78" rx="70" ry="20" fill="#f3ecdc"/>
         <ellipse cx="76" cy="72" rx="22" ry="10" fill="${fill}"/>
         <ellipse cx="122" cy="70" rx="20" ry="9" fill="#7fae4e"/>
@@ -47,9 +48,9 @@
         <circle cx="140" cy="80" r="7" fill="#f7d774"/>`,
     gyoza: (fill) => `
       <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231e"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#33302a"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#454138" stroke-width="2"/>
+        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
+        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
+        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
         <g fill="${fill}">
           <path d="M40 96 Q62 68 84 96 Q62 108 40 96Z"/>
           <path d="M78 88 Q100 60 122 88 Q100 100 78 88Z"/>
@@ -60,55 +61,29 @@
         </g>`
   };
 
+  // Empfehlungen des Hauses — IDs entsprechen der Speisekarte (menu-data.js)
   const kaitenDishes = [
-    { id: "sig-roll", name: "Jasuvi Signature Roll", price: 13.9, art: plateArt.roll("#e0512b"), tag: "看板ロール" },
-    { id: "flamed-salmon", name: "Flamed Salmon Roll", price: 12.9, art: plateArt.roll("#ff8f66"), tag: "炙りサーモン" },
-    { id: "nigiri-mix", name: "Nigiri-Auswahl (8 Stk.)", price: 16.9, art: plateArt.nigiri("#e8734a"), tag: "にぎり" },
-    { id: "dragon-roll", name: "Dragon Roll", price: 13.4, art: plateArt.roll("#7fae4e"), tag: "ドラゴン" },
-    { id: "poke-sake", name: "Poke Bowl Lachs", price: 12.9, art: plateArt.bowl("#e8734a"), tag: "ポケ丼" },
-    { id: "gyoza-6", name: "Gyoza (6 Stk.)", price: 6.9, art: plateArt.gyoza("#e9d3a3"), tag: "餃子" }
+    { id: "s1", name: "Tiger Roll", price: 16.5, art: plateArt.roll("#e8734a"), tag: "タイガー" },
+    { id: "t1", name: "Big Fried Salmon", price: 9.5, art: plateArt.roll("#f0a35e"), tag: "クランチー" },
+    { id: "n1", name: "Sake Nigiri (2 Stk.)", price: 6.5, art: plateArt.nigiri("#e8734a"), tag: "にぎり" },
+    { id: "s6", name: "Dragon Roll", price: 17.5, art: plateArt.roll("#7fae4e"), tag: "ドラゴン" },
+    { id: "b1", name: "Lachs Bowl", price: 16.5, art: plateArt.bowl("#e8734a"), tag: "サーモン丼" },
+    { id: "s2", name: "Double Queen", price: 17.5, art: plateArt.roll("#d4af5c"), tag: "クイーン" },
+    { id: "7", name: "Gyoza (3 Stk.)", price: 7.5, art: plateArt.gyoza("#e9d3a3"), tag: "餃子" },
+    { id: "n8", name: "Aburi Sake Nigiri (2 Stk.)", price: 7.5, art: plateArt.nigiri("#d98a48"), tag: "炙り" },
+    { id: "b5", name: "Yakitori Bowl", price: 16.5, art: plateArt.bowl("#c98a3e"), tag: "焼き鳥丼" },
+    { id: "s10", name: "Duck Queen", price: 17.5, art: plateArt.roll("#b8763a"), tag: "ダック" }
   ];
 
-  const menuData = {
-    vorspeisen: [
-      { id: "miso", name: "Miso-Suppe", desc: "Tofu, Wakame, Frühlingslauch", price: 3.9, veg: true },
-      { id: "edamame", name: "Edamame", desc: "Junge Sojabohnen mit Meersalz", price: 4.9, veg: true },
-      { id: "wakame", name: "Wakame-Salat", desc: "Algensalat mit Sesamdressing", price: 5.4, veg: true },
-      { id: "gyoza-6", name: "Gyoza (6 Stk.)", desc: "Gefüllte Teigtaschen, knusprig gebraten", price: 6.9 },
-      { id: "ebi-tempura", name: "Ebi Tempura (4 Stk.)", desc: "Garnelen im knusprigen Tempurateig", price: 8.9 }
-    ],
-    nigiri: [
-      { id: "kappa-maki", name: "Kappa Maki (6 Stk.)", desc: "Gurke", price: 3.5, veg: true },
-      { id: "avocado-maki", name: "Avocado Maki (6 Stk.)", desc: "Cremige Avocado", price: 3.9, veg: true },
-      { id: "sake-maki", name: "Sake Maki (6 Stk.)", desc: "Lachs", price: 4.5 },
-      { id: "tekka-maki", name: "Tekka Maki (6 Stk.)", desc: "Thunfisch", price: 4.9 },
-      { id: "nigiri-avocado", name: "Nigiri Avocado (2 Stk.)", desc: "Avocado auf Sushi-Reis", price: 3.9, veg: true },
-      { id: "nigiri-sake", name: "Nigiri Sake (2 Stk.)", desc: "Lachs auf Sushi-Reis", price: 4.8 },
-      { id: "nigiri-maguro", name: "Nigiri Maguro (2 Stk.)", desc: "Thunfisch auf Sushi-Reis", price: 5.4 },
-      { id: "nigiri-unagi", name: "Nigiri Unagi (2 Stk.)", desc: "Gegrillter Aal, Teriyaki-Glasur", price: 5.8 }
-    ],
-    rolls: [
-      { id: "california", name: "California Roll (8 Stk.)", desc: "Surimi, Avocado, Gurke, Masago", price: 8.9 },
-      { id: "crunchy-ebi", name: "Crunchy Ebi Roll (8 Stk.)", desc: "Tempura-Garnele, Avocado, Crunch", price: 10.9 },
-      { id: "spicy-tuna", name: "Spicy Tuna Roll (8 Stk.)", desc: "Thunfisch, Spicy-Mayo, Gurke", price: 11.4 },
-      { id: "flamed-salmon", name: "Flamed Salmon Roll (8 Stk.)", desc: "Abgeflämmter Lachs, Teriyaki, Sesam", price: 12.9 },
-      { id: "rainbow", name: "Rainbow Roll (8 Stk.)", desc: "California Roll mit Lachs, Thunfisch & Avocado belegt", price: 12.9 },
-      { id: "dragon-roll", name: "Dragon Roll (8 Stk.)", desc: "Tempura-Garnele, Avocado, Unagi-Sauce", price: 13.4 },
-      { id: "sig-roll", name: "Jasuvi Signature Roll (8 Stk.)", desc: "Lachs, Avocado, Crunch, Trüffel-Mayo — unser Aushängeschild", price: 13.9 }
-    ],
-    warm: [
-      { id: "yaki-udon", name: "Yaki Udon", desc: "Gebratene Udon-Nudeln mit Gemüse", price: 11.9, veg: true },
-      { id: "chicken-teriyaki", name: "Chicken Teriyaki", desc: "Mit Reis und gedünstetem Gemüse", price: 12.4 },
-      { id: "poke-sake", name: "Poke Bowl Lachs", desc: "Sushi-Reis, Lachs, Edamame, Avocado, Sesam", price: 12.9 },
-      { id: "sake-don", name: "Sake Don", desc: "Lachs-Sashimi auf Sushi-Reis", price: 13.9 },
-      { id: "ente-knusprig", name: "Knusprige Ente", desc: "Mit Reis und Hoisin-Sauce", price: 14.9 }
-    ]
-  };
-
-  // Preis-Lookup über alle Quellen (Kaiten + Speisekarte)
+  // Preis-Lookup über die komplette Speisekarte + Kaiten-Band
   const priceBook = new Map();
-  kaitenDishes.forEach((d) => priceBook.set(d.id, { name: d.name, price: d.price }));
-  Object.values(menuData).flat().forEach((d) => priceBook.set(d.id, { name: d.name, price: d.price }));
+  Object.values(menuData).flat().forEach((group) => {
+    group.items.forEach((d) => {
+      if (typeof d.price === "number") priceBook.set(d.id, { name: d.name, price: d.price });
+    });
+  });
+  // Kaiten-Namen sind sprechender (z. B. "Sake Nigiri (2 Stk.)" statt "Sake") — sie gewinnen im Warenkorb
+  kaitenDishes.forEach((d) => priceBook.set(d.id, { name: d.name, price: priceBook.get(d.id)?.price ?? d.price }));
 
   /* ─────────── Preloader ─────────── */
   const preloader = document.getElementById("preloader");
@@ -121,7 +96,7 @@
     });
     setTimeout(() => preloader.classList.add("is-gone"), 1400);
   };
-  window.addEventListener("load", () => setTimeout(finishPreload, prefersReducedMotion ? 0 : 1500));
+  window.addEventListener("load", () => setTimeout(finishPreload, prefersReducedMotion ? 0 : 1400));
   setTimeout(finishPreload, 3200); // Fallback, falls "load" hängt
 
   /* ─────────── Scroll-Reveals ─────────── */
@@ -148,7 +123,7 @@
   }, { passive: true });
 
   /* ─────────── Magnetic Buttons ─────────── */
-  if (!prefersReducedMotion && matchMedia("(pointer: fine)").matches) {
+  if (!prefersReducedMotion && finePointer) {
     document.querySelectorAll("[data-magnetic]").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
@@ -157,22 +132,22 @@
         el.style.transform = `translate(${x}px, ${y}px)`;
       });
       el.addEventListener("mouseleave", () => {
-        el.style.transition = "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
+        el.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
         el.style.transform = "";
         setTimeout(() => { el.style.transition = ""; }, 500);
       });
     });
   }
 
-  /* ─────────── Hero-Teller Tilt ─────────── */
+  /* ─────────── Hero-Foto Tilt ─────────── */
   const heroPlate = document.getElementById("heroPlate");
-  if (heroPlate && !prefersReducedMotion && matchMedia("(pointer: fine)").matches) {
+  if (heroPlate && !prefersReducedMotion && finePointer) {
     const hero = document.getElementById("hero");
     hero.addEventListener("mousemove", (e) => {
       const r = hero.getBoundingClientRect();
       const nx = (e.clientX - r.left) / r.width - 0.5;
       const ny = (e.clientY - r.top) / r.height - 0.5;
-      heroPlate.style.transform = `rotateY(${nx * 16}deg) rotateX(${-ny * 14}deg)`;
+      heroPlate.style.transform = `rotateY(${nx * 10}deg) rotateX(${-ny * 8}deg)`;
     });
     hero.addEventListener("mouseleave", () => { heroPlate.style.transform = ""; });
   }
@@ -184,7 +159,8 @@
   const captionName = document.getElementById("kaitenName");
   const captionPrice = document.getElementById("kaitenPrice");
   const stepAngle = 360 / kaitenDishes.length;
-  const radius = Math.round(Math.min(340, Math.max(230, window.innerWidth * 0.26)));
+  const radius = Math.round(Math.min(420, Math.max(260, window.innerWidth * 0.3)));
+
   let ringAngle = 0;
 
   kaitenDishes.forEach((dish, i) => {
@@ -209,7 +185,7 @@
       let d = Math.abs(((i * stepAngle + ringAngle) % 360 + 360) % 360);
       if (d > 180) d = 360 - d;
       p.classList.toggle("is-front", i === front);
-      p.classList.toggle("is-back", d > 120);
+      p.classList.toggle("is-back", d > 108);
       // Teller drehen sich gegen den Ring, damit sie immer zur Kamera schauen
       p.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle - ringAngle}deg)`;
     });
@@ -239,7 +215,7 @@
     if (!dragging) return;
     const dx = x - dragStartX;
     if (Math.abs(dx) > 4) moved = true;
-    ringAngle = dragStartAngle + dx * 0.35;
+    ringAngle = dragStartAngle + dx * 0.3;
     updateKaiten(false);
   };
   const dragEnd = () => {
@@ -288,22 +264,44 @@
   /* ─────────── Speisekarte ─────────── */
   const menuList = document.getElementById("menuList");
   const tabs = document.querySelectorAll(".menu-tab");
+
   function renderMenu(cat) {
     menuList.innerHTML = "";
-    menuData[cat].forEach((item, i) => {
-      const row = document.createElement("article");
-      row.className = "menu-item";
-      row.style.animationDelay = `${i * 0.06}s`;
-      row.innerHTML = `
-        <div class="menu-item-info">
-          <h4>${item.name}${item.veg ? ' <span class="veg" title="vegetarisch/vegan">🌱</span>' : ""}</h4>
-          <p>${item.desc}</p>
-        </div>
-        <span class="menu-item-price">${fmt(item.price)}</span>
-        <button class="menu-item-add" data-id="${item.id}" aria-label="${item.name} auf die Bestellkarte legen">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        </button>`;
-      menuList.appendChild(row);
+    let delay = 0;
+    const step = 0.045;
+    menuData[cat].forEach((group) => {
+      const head = document.createElement("div");
+      head.className = "menu-group-head";
+      head.style.animationDelay = `${delay}s`;
+      head.innerHTML = `<h3>${group.title}</h3>`;
+      menuList.appendChild(head);
+      delay = Math.min(delay + step, 0.55);
+      if (group.note) {
+        const note = document.createElement("p");
+        note.className = "menu-group-note";
+        note.textContent = group.note;
+        note.style.animationDelay = `${delay}s`;
+        menuList.appendChild(note);
+      }
+      group.items.forEach((item) => {
+        const row = document.createElement("article");
+        row.className = "menu-item";
+        row.style.animationDelay = `${delay}s`;
+        delay = Math.min(delay + step, 0.55);
+        const price = typeof item.price === "number" ? fmt(item.price) : item.priceText;
+        const noLabel = /^\d+$/.test(item.id) ? `<span class="menu-item-no">${item.id}</span>` : "";
+        row.innerHTML = `
+          <div class="menu-item-info">
+            <h4>${noLabel}${item.name}${item.veg ? ' <span class="veg-dot" title="vegetarisch/vegan" role="img" aria-label="vegetarisch"></span>' : ""}</h4>
+            ${item.desc ? `<p>${item.desc}</p>` : ""}
+          </div>
+          <span class="menu-item-price">${price}</span>
+          ${typeof item.price === "number" ? `
+          <button class="menu-item-add" data-id="${item.id}" aria-label="${item.name} auf die Bestellkarte legen">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>` : `<span></span>`}`;
+        menuList.appendChild(row);
+      });
     });
   }
   tabs.forEach((tab) => {
@@ -327,7 +325,7 @@
   const cartCount = document.getElementById("cartCount");
   const cartItemsEl = document.getElementById("cartItems");
   const cartTotalEl = document.getElementById("cartTotal");
-  const cart = new Map(); // id -> qty
+  const cart = new Map(); // id -> Menge
 
   const openCart = () => {
     cartEl.classList.add("is-open");
@@ -369,7 +367,7 @@
         { transform: `translate(${dx * 0.5}px, ${dy - 120}px) scale(1.15)`, opacity: 1, offset: 0.55 },
         { transform: `translate(${dx}px, ${dy}px) scale(0.35)`, opacity: 0.7 }
       ],
-      { duration: 750, easing: "cubic-bezier(0.5, 0, 0.3, 1)" }
+      { duration: 700, easing: "cubic-bezier(0.5, 0, 0.3, 1)" }
     ).onfinish = () => dot.remove();
   }
 
@@ -377,7 +375,7 @@
     if (!priceBook.has(id)) return;
     cart.set(id, (cart.get(id) || 0) + 1);
     flyToCart(sourceEl);
-    setTimeout(() => { renderCart(); bump(cartCount); }, prefersReducedMotion ? 0 : 650);
+    setTimeout(() => { renderCart(id); bump(cartCount); }, prefersReducedMotion ? 0 : 600);
   }
 
   function changeQty(id, delta) {
@@ -387,7 +385,7 @@
       cart.delete(id);
       if (row && !prefersReducedMotion) {
         row.classList.add("is-leaving");
-        setTimeout(renderCart, 320);
+        setTimeout(() => renderCart(), 320);
       } else {
         renderCart();
       }
@@ -397,7 +395,7 @@
     }
   }
 
-  function renderCart() {
+  function renderCart(newId = null) {
     const count = [...cart.values()].reduce((a, b) => a + b, 0);
     const total = [...cart.entries()].reduce((sum, [id, qty]) => sum + priceBook.get(id).price * qty, 0);
     cartCount.textContent = count;
@@ -409,7 +407,7 @@
     cart.forEach((qty, id) => {
       const { name, price } = priceBook.get(id);
       const li = document.createElement("li");
-      li.className = "cart-item";
+      li.className = "cart-item" + (id === newId ? " is-new" : "");
       li.dataset.id = id;
       li.innerHTML = `
         <span class="cart-item-name">${name}</span>
@@ -438,8 +436,8 @@
     });
   });
 
-  /* ─────────── Karten-Tilt (Philosophie & Öffnungszeiten) ─────────── */
-  if (!prefersReducedMotion && matchMedia("(pointer: fine)").matches) {
+  /* ─────────── Karten-Tilt (Über uns & Öffnungszeiten) ─────────── */
+  if (!prefersReducedMotion && finePointer) {
     document.querySelectorAll("[data-tilt]").forEach((card) => {
       card.addEventListener("mousemove", (e) => {
         const r = card.getBoundingClientRect();

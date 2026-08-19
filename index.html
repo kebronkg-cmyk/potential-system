@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JaSuVi — Japanisches Restaurant München-Pasing</title>
-  <meta name="description" content="JaSuVi München-Pasing: frisches Sushi, warme japanische Küche und kreative Signature Rolls. Abholung & Lieferung. Bachbauernstraße 5, 81241 München.">
+  <title>JaSuVi — Japanisches Restaurant &amp; Asian Fusion München-Pasing</title>
+  <meta name="description" content="JaSuVi München-Pasing: frisches Sushi, Special Rolls und vietnamesische Küche: Phở, Bún, Wok. Abholung & Lieferung. Bachbauernstraße 5, 81241 München, Tel. 089 9274 0177.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23c8401f'/><circle cx='50' cy='50' r='20' fill='%23f5efe4'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23c9a24b'/><circle cx='50' cy='50' r='20' fill='%230f0e0b'/></svg>">
 </head>
 <body>
 
   <!-- ══════════ Preloader ══════════ -->
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader-inner">
-      <span class="preloader-kanji">寿司</span>
-      <div class="preloader-word">
-        <span class="preloader-letter">J</span><span class="preloader-letter">a</span><span class="preloader-letter">S</span><span class="preloader-letter">u</span><span class="preloader-letter">V</span><span class="preloader-letter">i</span>
-      </div>
+      <img class="preloader-logo" src="img/logo-hero.png" alt="" width="292" height="160">
       <div class="preloader-line"><span class="preloader-line-fill"></span></div>
     </div>
     <div class="preloader-panel panel-left"></div>
@@ -32,15 +29,13 @@
   <!-- ══════════ Header ══════════ -->
   <header class="site-header" id="siteHeader">
     <a class="brand" href="#top" data-magnetic>
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 100 100" width="34" height="34"><circle cx="50" cy="50" r="44" fill="var(--vermillion)"/><circle cx="50" cy="50" r="19" fill="var(--paper)"/></svg>
-      </span>
-      <span class="brand-name">JaSuVi</span>
+      <img class="brand-logo" src="img/logo.png" alt="JaSuVi — Japanisches Restaurant" width="146" height="80">
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
       <a href="#kaiten" class="nav-link" data-magnetic>Kaiten</a>
       <a href="#speisekarte" class="nav-link" data-magnetic>Speisekarte</a>
-      <a href="#philosophie" class="nav-link" data-magnetic>Philosophie</a>
+      <a href="#galerie" class="nav-link" data-magnetic>Galerie</a>
+      <a href="#philosophie" class="nav-link" data-magnetic>Über uns</a>
       <a href="#kontakt" class="nav-link" data-magnetic>Kontakt</a>
     </nav>
     <button class="cart-toggle" id="cartToggle" data-magnetic aria-label="Bestellkarte öffnen">
@@ -64,66 +59,26 @@
       </div>
 
       <div class="hero-content">
-        <p class="hero-eyebrow reveal-up"><span class="eyebrow-dot"></span>Japanisches Restaurant · München-Pasing</p>
+        <p class="hero-eyebrow reveal-up"><span class="eyebrow-dot"></span>Japanische Küche &amp; Asian Fusion · München-Pasing</p>
         <h1 class="hero-title">
           <span class="hero-line"><span class="hero-line-inner">Sushi mit</span></span>
           <span class="hero-line"><span class="hero-line-inner accent">Handwerk</span></span>
           <span class="hero-line"><span class="hero-line-inner">&amp; Seele.</span></span>
         </h1>
-        <p class="hero-sub reveal-up">Frische, authentische und kreative Sushi-Kreationen — traditionelles
-        japanisches Handwerk trifft moderne Einflüsse. Dazu warme Gerichte und feine Vorspeisen.</p>
+        <p class="hero-sub reveal-up">Frische, authentische und kreative Sushi-Kreationen: traditionelles
+        japanisches Handwerk trifft vietnamesische Küche mit Special Rolls, Phở, Bún und Gerichten aus dem Wok.</p>
         <div class="hero-cta reveal-up">
           <a href="#kaiten" class="btn btn-primary" data-magnetic><span>Zum Kaiten-Band</span></a>
           <a href="#speisekarte" class="btn btn-ghost" data-magnetic><span>Speisekarte</span></a>
         </div>
       </div>
 
-      <div class="hero-plate" aria-hidden="true">
-        <div class="hero-plate-tilt" id="heroPlate">
-          <svg class="plate-svg" viewBox="0 0 400 400">
-            <defs>
-              <radialGradient id="plateGrad" cx="50%" cy="42%" r="60%">
-                <stop offset="0%" stop-color="#2c2a26"/><stop offset="100%" stop-color="#191815"/>
-              </radialGradient>
-              <linearGradient id="salmonGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#ff8f66"/><stop offset="100%" stop-color="#e85c33"/>
-              </linearGradient>
-              <linearGradient id="riceGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fdfaf2"/><stop offset="100%" stop-color="#e8e0cf"/>
-              </linearGradient>
-            </defs>
-            <ellipse cx="200" cy="210" rx="185" ry="180" fill="url(#plateGrad)"/>
-            <ellipse cx="200" cy="205" rx="150" ry="146" fill="none" stroke="#3a372f" stroke-width="2"/>
-            <!-- nigiri 1 -->
-            <g transform="translate(118 150) rotate(-14)">
-              <ellipse cx="0" cy="16" rx="47" ry="21" fill="url(#riceGrad)"/>
-              <path d="M-52 4 Q0 -26 52 4 Q30 16 0 14 Q-30 16 -52 4Z" fill="url(#salmonGrad)"/>
-              <path d="M-36 -2 Q0 -14 36 -2" stroke="#fff" stroke-opacity=".55" stroke-width="3" fill="none"/>
-            </g>
-            <!-- nigiri 2 -->
-            <g transform="translate(268 170) rotate(11)">
-              <ellipse cx="0" cy="16" rx="47" ry="21" fill="url(#riceGrad)"/>
-              <path d="M-52 4 Q0 -26 52 4 Q30 16 0 14 Q-30 16 -52 4Z" fill="#c8401f"/>
-              <path d="M-36 -2 Q0 -14 36 -2" stroke="#ffb199" stroke-opacity=".6" stroke-width="3" fill="none"/>
-            </g>
-            <!-- maki row -->
-            <g transform="translate(200 282)">
-              <g transform="translate(-90 0)">
-                <circle r="34" fill="#191512"/><circle r="27" fill="url(#riceGrad)"/><circle r="11" fill="#7fae4e"/>
-              </g>
-              <g>
-                <circle r="34" fill="#191512"/><circle r="27" fill="url(#riceGrad)"/><circle r="11" fill="url(#salmonGrad)"/>
-              </g>
-              <g transform="translate(90 0)">
-                <circle r="34" fill="#191512"/><circle r="27" fill="url(#riceGrad)"/><circle r="11" fill="#d9375e"/>
-              </g>
-            </g>
-            <!-- garnish -->
-            <path d="M96 236 q18 -8 34 2 q-16 10 -34 -2Z" fill="#7fae4e" opacity=".9"/>
-            <circle cx="306" cy="248" r="13" fill="#e8f0dd"/><circle cx="306" cy="248" r="8" fill="#bcd39a"/>
-          </svg>
-        </div>
-        <div class="hero-plate-shadow"></div>
+      <div class="hero-photo-wrap" aria-hidden="true">
+        <figure class="hero-photo" id="heroPlate">
+          <img src="img/hero.jpg" alt="" width="1200" height="1060" fetchpriority="high">
+          <span class="hero-photo-ring"></span>
+        </figure>
+        <div class="hero-photo-shadow"></div>
       </div>
 
       <a class="scroll-hint" href="#kaiten" aria-label="Weiter scrollen">
@@ -135,7 +90,7 @@
     <!-- ══════════ Marquee ══════════ -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
-        <span class="marquee-content">Nigiri <i>·</i> Maki <i>·</i> Signature Rolls <i>·</i> Poke Bowls <i>·</i> Gyoza <i>·</i> Tempura <i>·</i> Vegan Selection <i>·</i>&nbsp;</span><span class="marquee-content">Nigiri <i>·</i> Maki <i>·</i> Signature Rolls <i>·</i> Poke Bowls <i>·</i> Gyoza <i>·</i> Tempura <i>·</i> Vegan Selection <i>·</i>&nbsp;</span>
+        <span class="marquee-content">Sushi <i>·</i> Special Rolls <i>·</i> Sashimi <i>·</i> Phở <i>·</i> Bún Bowls <i>·</i> Wok <i>·</i> Ramen <i>·</i> Cocktails <i>·</i>&nbsp;</span><span class="marquee-content">Sushi <i>·</i> Special Rolls <i>·</i> Sashimi <i>·</i> Phở <i>·</i> Bún Bowls <i>·</i> Wok <i>·</i> Ramen <i>·</i> Cocktails <i>·</i>&nbsp;</span>
       </div>
     </div>
 
@@ -146,8 +101,8 @@
         <h2 class="section-title split-lines">
           <span class="hero-line"><span class="hero-line-inner">Das <em class="accent">Kaiten</em>-Band</span></span>
         </h2>
-        <p class="section-sub reveal-up">Wie im Kaiten-Sushi-Restaurant zieht das Band unsere Signature-Gerichte an Ihnen
-        vorbei. Ziehen Sie das Band mit der Maus oder dem Finger — und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
+        <p class="section-sub reveal-up">Wie im Kaiten-Sushi-Restaurant zieht das Band unsere Empfehlungen an Ihnen
+        vorbei. Ziehen Sie das Band mit der Maus oder dem Finger und legen Sie Ihre Favoriten direkt auf die Bestellkarte.</p>
       </div>
 
       <div class="kaiten-stage" id="kaitenStage">
@@ -162,8 +117,8 @@
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
         </button>
         <div class="kaiten-caption" id="kaitenCaption" aria-live="polite">
-          <span class="kaiten-caption-name" id="kaitenName">Jasuvi Signature Roll</span>
-          <span class="kaiten-caption-price" id="kaitenPrice">13,90 €</span>
+          <span class="kaiten-caption-name" id="kaitenName">Tiger Roll</span>
+          <span class="kaiten-caption-price" id="kaitenPrice">16,50 €</span>
         </div>
         <button class="kaiten-arrow" id="kaitenNext" data-magnetic aria-label="Band weiterdrehen">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
@@ -185,42 +140,82 @@
       </div>
 
       <div class="menu-tabs reveal-up" role="tablist" aria-label="Speisekarten-Kategorien">
-        <button class="menu-tab is-active" data-cat="vorspeisen" role="tab" aria-selected="true">Vorspeisen</button>
-        <button class="menu-tab" data-cat="nigiri" role="tab" aria-selected="false">Nigiri &amp; Maki</button>
-        <button class="menu-tab" data-cat="rolls" role="tab" aria-selected="false">Special Rolls</button>
-        <button class="menu-tab" data-cat="warm" role="tab" aria-selected="false">Bowls &amp; Warmes</button>
+        <button class="menu-tab" data-cat="lunch" role="tab" aria-selected="false">Lunch</button>
+        <button class="menu-tab is-active" data-cat="vorspeisen" role="tab" aria-selected="true">Vorspeisen &amp; Salate</button>
+        <button class="menu-tab" data-cat="hauptgerichte" role="tab" aria-selected="false">Hauptgerichte</button>
+        <button class="menu-tab" data-cat="nudeln" role="tab" aria-selected="false">Nudeln &amp; Reis</button>
+        <button class="menu-tab" data-cat="sushi" role="tab" aria-selected="false">Sushi</button>
+        <button class="menu-tab" data-cat="rolls" role="tab" aria-selected="false">Special Rolls &amp; Platten</button>
+        <button class="menu-tab" data-cat="suesses" role="tab" aria-selected="false">Dessert &amp; Getränke</button>
       </div>
 
       <div class="menu-list" id="menuList"><!-- per JS gerendert --></div>
 
-      <p class="menu-note reveal-up">Alle Preise inkl. MwSt. · Vegetarische &amp; vegane Optionen sind mit 🌱 markiert ·
-      Allergene &amp; Zusatzstoffe nennen wir Ihnen gern telefonisch.</p>
+      <p class="menu-note reveal-up">Alle Preise inkl. MwSt. · Lunch-Karte täglich 11:30 – 14:45 (außer Sonntag) ·
+      Vegetarische &amp; vegane Gerichte sind mit <span class="veg-dot" aria-hidden="true"></span> markiert ·
+      Allergene &amp; Zusatzstoffe nennen wir Ihnen gern telefonisch unter <a href="tel:+498992740177">089 9274 0177</a>.</p>
     </section>
 
-    <!-- ══════════ Philosophie ══════════ -->
+    <!-- ══════════ Galerie ══════════ -->
+    <section class="gallery section" id="galerie">
+      <div class="section-head">
+        <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Unsere Empfehlungen</p>
+        <h2 class="section-title split-lines">
+          <span class="hero-line"><span class="hero-line-inner">Ein Blick auf</span></span>
+          <span class="hero-line"><span class="hero-line-inner">den <em class="accent">Teller.</em></span></span>
+        </h2>
+      </div>
+      <div class="gallery-grid">
+        <figure class="gallery-item reveal-up gi-tall">
+          <img src="img/sushi-2.jpg" alt="Flatlay mehrerer Sushi-Teller" loading="lazy" width="1024" height="1024">
+          <figcaption>Sushi-Platten für den großen Hunger</figcaption>
+        </figure>
+        <figure class="gallery-item reveal-up">
+          <img src="img/sushi-1.jpg" alt="Lachs-Rollen auf schwarzem Teller" loading="lazy" width="1024" height="1024">
+          <figcaption>Frische Lachs-Rollen</figcaption>
+        </figure>
+        <figure class="gallery-item reveal-up">
+          <img src="img/sushi-3.jpg" alt="Sushi-Rollen auf Schieferplatte mit Salat" loading="lazy" width="1024" height="1024">
+          <figcaption>Inside-Out Rolls auf Schiefer</figcaption>
+        </figure>
+        <figure class="gallery-item reveal-up">
+          <img src="img/gericht-chicken-curry.jpg" alt="Paniertes Hähnchen mit roter Curry-Suppe" loading="lazy" width="1024" height="1024">
+          <figcaption>Gà Curry mit Kokosmilch</figcaption>
+        </figure>
+        <figure class="gallery-item reveal-up">
+          <img src="img/sushi-4.jpg" alt="Garnelen-Sushi auf blauem Teller" loading="lazy" width="907" height="907">
+          <figcaption>Ebi — Garnelen-Sushi</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ Philosophie / Über uns ══════════ -->
     <section class="philosophy section" id="philosophie">
       <div class="section-head">
-        <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Philosophie</p>
+        <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Über uns</p>
         <h2 class="section-title split-lines">
           <span class="hero-line"><span class="hero-line-inner">Tradition, die man</span></span>
           <span class="hero-line"><span class="hero-line-inner"><em class="accent">schmeckt.</em></span></span>
         </h2>
+        <p class="section-sub reveal-up">Willkommen im Jasuvi Restaurant, Ihrem Ort für frische, authentische und
+        kreative Sushi-Kreationen. Unser Team verbindet traditionelle japanische Handwerkskunst mit modernen
+        Einflüssen, dazu servieren wir warme asiatische Gerichte und köstliche Vorspeisen.</p>
       </div>
       <div class="philosophy-grid">
         <article class="philo-card reveal-up" data-tilt>
           <span class="philo-kanji" aria-hidden="true">新</span>
           <h3>Kompromisslos frisch</h3>
-          <p>Fisch und Zutaten werden täglich frisch verarbeitet — jede Rolle entsteht erst, wenn Sie bestellen. Nichts liegt, nichts wartet.</p>
+          <p>Beste Fischqualität und hochwertige Zutaten, täglich frisch verarbeitet. Jede Rolle entsteht erst, wenn Sie bestellen.</p>
         </article>
         <article class="philo-card reveal-up" data-tilt>
           <span class="philo-kanji" aria-hidden="true">技</span>
           <h3>Echtes Handwerk</h3>
-          <p>Vom Reis bis zum Schnitt: traditionelle japanische Technik, mit Geduld perfektioniert und mit modernen Ideen weitergedacht.</p>
+          <p>Ob klassische Nigiri, kunstvoll gerollte Maki oder aufregende Fusion-Spezialitäten, mit Liebe zum Detail und ansprechender Präsentation.</p>
         </article>
         <article class="philo-card reveal-up" data-tilt>
           <span class="philo-kanji" aria-hidden="true">心</span>
           <h3>Mit Herz serviert</h3>
-          <p>Ob im Restaurant in Pasing, zur Abholung oder geliefert — bei uns steckt in jedem Gericht die gleiche Sorgfalt und Gastfreundschaft.</p>
+          <p>Entspannte Atmosphäre und exzellenter Service in Pasing, oder zur Abholung und Lieferung. Wir freuen uns auf Sie!</p>
         </article>
       </div>
     </section>
@@ -238,6 +233,8 @@
             Bachbauernstraße 5<br>81241 München<br>
             <a href="tel:+498992740177" class="contact-phone" data-magnetic>089 9274 0177</a>
           </address>
+          <p class="contact-hint reveal-up">Für Bestellungen und Reservierungen stehen wir Ihnen gerne telefonisch
+          zur Verfügung. Wir freuen uns auf Ihren Anruf!</p>
           <div class="contact-actions reveal-up">
             <a class="btn btn-primary" href="tel:+498992740177" data-magnetic><span>Jetzt bestellen</span></a>
             <a class="btn btn-ghost" href="https://maps.google.com/?q=JaSuVi+Bachbauernstra%C3%9Fe+5+81241+M%C3%BCnchen" target="_blank" rel="noopener" data-magnetic><span>Route planen</span></a>
@@ -260,7 +257,7 @@
     <footer class="footer">
       <div class="footer-word" aria-hidden="true">JaSuVi</div>
       <div class="footer-meta">
-        <span>© 2026 JaSuVi · Japanisches Restaurant</span>
+        <span>© 2026 Jasuvi Restaurant · Alle Rechte vorbehalten</span>
         <span>Bachbauernstraße 5 · 81241 München · <a href="tel:+498992740177">089 9274 0177</a></span>
         <span>いただきます — Guten Appetit!</span>
       </div>
@@ -299,7 +296,7 @@
         <span>Zwischensumme</span>
         <span class="cart-total" id="cartTotal">0,00 €</span>
       </div>
-      <p class="cart-foot-hint">Abholung &amp; Lieferung — geben Sie Ihre Auswahl einfach telefonisch durch:</p>
+      <p class="cart-foot-hint">Abholung &amp; Lieferung: Geben Sie Ihre Auswahl einfach telefonisch durch:</p>
       <a class="btn btn-primary btn-block" href="tel:+498992740177" data-magnetic><span>089 9274 0177 anrufen</span></a>
       <div class="cart-partner">
         <span>oder bestellen über</span>
@@ -310,6 +307,7 @@
     </footer>
   </aside>
 
+  <script src="menu-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
