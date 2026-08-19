@@ -10,7 +10,7 @@
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(pointer: fine)").matches;
   const fmt = (n) => n.toFixed(2).replace(".", ",") + " €";
-  const menuData = window.JASUVI_MENU;
+  const menuData = window.JASUVI_MENU || {}; // Rechtsseiten laden keine Speisekartendaten
   const WHATSAPP = "498992740177"; // Restaurant-Rufnummer im internationalen Format
 
   /* ─────────── Kaiten: die Beliebtesten, mit Original-Fotos ─────────── */
@@ -63,11 +63,13 @@
 
   /* ─────────── Header ─────────── */
   const header = document.getElementById("siteHeader");
+  const isStaticHeader = header.classList.contains("is-scrolled") && !document.querySelector(".hero");
   let lastY = window.scrollY;
   window.addEventListener("scroll", () => {
     const y = window.scrollY;
-    header.classList.toggle("is-scrolled", y > 40);
-    header.classList.toggle("is-hidden", y > lastY && y > 300 && !cartEl.classList.contains("is-open"));
+    if (!isStaticHeader) header.classList.toggle("is-scrolled", y > 40);
+    const cartOpen = cartEl ? cartEl.classList.contains("is-open") : false;
+    header.classList.toggle("is-hidden", y > lastY && y > 300 && !cartOpen);
     lastY = y;
   }, { passive: true });
 
@@ -112,7 +114,10 @@
     }
   }
 
-  /* ─────────── Kaiten-3D-Band ─────────── */
+  /* ─────────── Kaiten — rundes Band in der Draufsicht ───────────
+     Der Ring dreht sich um die eigene Achse; jeder Teller wird
+     gegenrotiert, damit Foto und Beschriftung aufrecht bleiben.
+     Der aktive Teller ist der auf der 6-Uhr-Position (unten). */
   const ring = document.getElementById("kaitenRing");
   if (ring) {
     const stage = document.getElementById("kaitenStage");
@@ -120,7 +125,8 @@
     const captionName = document.getElementById("kaitenName");
     const captionPrice = document.getElementById("kaitenPrice");
     const stepAngle = 360 / kaitenDishes.length;
-    const radius = Math.round(Math.min(400, Math.max(250, window.innerWidth * 0.27)));
+    const FRONT_AT = 180; // Winkel der aktiven Position (unten)
+    let radius = 200;
     let ringAngle = 0;
     let dragging = false;
 
@@ -134,26 +140,28 @@
           <span class="plate-rim"></span>
         </span>
         <span class="plate-tag">${dish.tag}</span>`;
-      plate.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle}deg)`;
       ring.appendChild(plate);
     });
-    const plates = [...ring.children];
+    const plates = [...ring.children.length ? ring.querySelectorAll(".kaiten-plate") : []];
+
+    function measure() {
+      const plateSize = parseFloat(getComputedStyle(stage).getPropertyValue("--plate")) || 140;
+      radius = stage.clientWidth / 2 - plateSize * 0.62;
+      stage.style.setProperty("--kr", `${radius}px`);
+    }
+    measure();
+    window.addEventListener("resize", () => { measure(); updateKaiten(false); });
 
     const frontIndex = () => {
-      const norm = ((-ringAngle % 360) + 360) % 360;
+      const norm = (((FRONT_AT - ringAngle) % 360) + 360) % 360;
       return Math.round(norm / stepAngle) % kaitenDishes.length;
     };
     function updateKaiten(animateCaption = true) {
-      ring.style.transform = `rotateY(${ringAngle}deg)`;
+      ring.style.transform = `rotate(${ringAngle}deg)`;
       const front = frontIndex();
       plates.forEach((p, i) => {
-        // Winkelabstand des Tellers zur Front (0 = vorn, 180 = hinten)
-        let d = Math.abs(((i * stepAngle + ringAngle) % 360 + 360) % 360);
-        if (d > 180) d = 360 - d;
         p.classList.toggle("is-front", i === front);
-        p.classList.toggle("is-back", d > 108);
-        // Teller drehen sich gegen den Ring, damit sie immer zur Kamera schauen
-        p.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle - ringAngle}deg)`;
+        p.style.transform = `rotate(${i * stepAngle}deg) translateY(${-radius}px) rotate(${-i * stepAngle - ringAngle}deg)`;
       });
       const dish = kaitenDishes[front];
       if (!animateCaption || prefersReducedMotion) {
@@ -171,17 +179,17 @@
     updateKaiten(false);
 
     const rotateKaiten = (dir) => { ringAngle += dir * stepAngle; updateKaiten(); };
-    document.getElementById("kaitenPrev").addEventListener("click", () => rotateKaiten(1));
-    document.getElementById("kaitenNext").addEventListener("click", () => rotateKaiten(-1));
+    document.getElementById("kaitenPrev").addEventListener("click", () => rotateKaiten(-1));
+    document.getElementById("kaitenNext").addEventListener("click", () => rotateKaiten(1));
 
-    // Drag / Swipe
+    // Drag / Swipe — horizontale Bewegung dreht das Band
     let dragStartX = 0, dragStartAngle = 0, moved = false;
     const dragStartFn = (x) => { dragging = true; moved = false; dragStartX = x; dragStartAngle = ringAngle; ring.classList.add("no-anim"); stage.classList.add("is-dragging"); };
     const dragMove = (x) => {
       if (!dragging) return;
       const dx = x - dragStartX;
       if (Math.abs(dx) > 4) moved = true;
-      ringAngle = dragStartAngle + dx * 0.3;
+      ringAngle = dragStartAngle + dx * 0.25;
       updateKaiten(false);
     };
     const dragEnd = () => {
@@ -192,7 +200,11 @@
       ringAngle = Math.round(ringAngle / stepAngle) * stepAngle; // einrasten
       updateKaiten();
     };
-    stage.addEventListener("pointerdown", (e) => { dragStartFn(e.clientX); stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener("pointerdown", (e) => {
+      if (e.target.closest(".kaiten-center")) return; // Buttons im Zentrum nicht als Drag werten
+      dragStartFn(e.clientX);
+      stage.setPointerCapture(e.pointerId);
+    });
     stage.addEventListener("pointermove", (e) => dragMove(e.clientX));
     stage.addEventListener("pointerup", dragEnd);
     stage.addEventListener("pointercancel", dragEnd);
@@ -201,8 +213,8 @@
       const plate = e.target.closest(".kaiten-plate");
       if (!plate) return;
       const i = Number(plate.dataset.index);
-      // kürzester Weg zum angeklickten Teller
-      const target = -i * stepAngle;
+      // kürzester Weg: angeklickten Teller auf die 6-Uhr-Position drehen
+      const target = FRONT_AT - i * stepAngle;
       let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
       ringAngle += delta;
       updateKaiten();
@@ -333,21 +345,29 @@
   const cartTotalEl = document.getElementById("cartTotal");
   const cart = new Map(); // id -> Menge
 
-  const openCart = () => {
-    cartEl.classList.add("is-open");
-    cartScrim.classList.add("is-open");
-    cartEl.setAttribute("aria-hidden", "false");
-    header.classList.remove("is-hidden");
-  };
-  const closeCart = () => {
-    cartEl.classList.remove("is-open");
-    cartScrim.classList.remove("is-open");
-    cartEl.setAttribute("aria-hidden", "true");
-  };
-  cartToggle.addEventListener("click", () => (cartEl.classList.contains("is-open") ? closeCart() : openCart()));
-  document.getElementById("cartClose").addEventListener("click", closeCart);
-  cartScrim.addEventListener("click", closeCart);
-  window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
+  // Rechtsseiten (Impressum) tragen keine Bestellkarte — alles Folgende hängt daran
+  if (cartEl) {
+    const openCart = () => {
+      cartEl.classList.add("is-open");
+      cartScrim.classList.add("is-open");
+      cartEl.setAttribute("aria-hidden", "false");
+      header.classList.remove("is-hidden");
+    };
+    const closeCart = () => {
+      cartEl.classList.remove("is-open");
+      cartScrim.classList.remove("is-open");
+      cartEl.setAttribute("aria-hidden", "true");
+    };
+    cartToggle.addEventListener("click", () => (cartEl.classList.contains("is-open") ? closeCart() : openCart()));
+    document.getElementById("cartClose").addEventListener("click", closeCart);
+    cartScrim.addEventListener("click", closeCart);
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
+    cartItemsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".qty-btn");
+      if (!btn) return;
+      changeQty(btn.closest(".cart-item").dataset.id, btn.dataset.act === "plus" ? 1 : -1);
+    });
+  }
 
   function bump(el) {
     el.classList.remove("is-bumping");
@@ -378,7 +398,7 @@
   }
 
   function addToCart(id, sourceEl) {
-    if (!priceBook.has(id)) return;
+    if (!cartEl || !priceBook.has(id)) return;
     cart.set(id, (cart.get(id) || 0) + 1);
     flyToCart(sourceEl);
     setTimeout(() => { renderCart(id); bump(cartCount); }, prefersReducedMotion ? 0 : 600);
@@ -426,12 +446,6 @@
       cartItemsEl.appendChild(li);
     });
   }
-  cartItemsEl.addEventListener("click", (e) => {
-    const btn = e.target.closest(".qty-btn");
-    if (!btn) return;
-    changeQty(btn.closest(".cart-item").dataset.id, btn.dataset.act === "plus" ? 1 : -1);
-  });
-
   /* ─────────── Checkout: Bestellung ohne Backend ───────────
      Der Gast stellt seine Bestellung zusammen, ergänzt Name,
      Telefon und Abholung/Lieferung — daraus entsteht ein fertiger

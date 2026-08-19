@@ -272,6 +272,8 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .btn:active { transform: scale(0.96); }
 .btn-primary { background: linear-gradient(160deg, var(--gold-bright), var(--gold) 45%, var(--gold-deep)); color: var(--on-gold); font-weight: 600; }
 .btn-primary::before { background: var(--gold-deep); }
+.btn-icon { gap: 0.6rem; }
+.btn-icon svg { position: relative; z-index: 1; flex: none; }
 .btn-ghost { border: 1px solid var(--line); color: var(--paper); }
 .btn-ghost::before { background: rgba(245, 239, 228, 0.08); }
 .btn-block { width: 100%; }
@@ -413,44 +415,70 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .philo-card p { color: var(--paper-dim); font-size: 0.97rem; }
 
-/* ═══════════ Kaiten 3D ═══════════ */
+/* ═══════════ Kaiten — rundes Band in der Draufsicht ═══════════ */
 .kaiten { background: var(--ink-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
-.kaiten .section-head { margin-inline: auto; text-align: center; }
+.kaiten .section-head { margin-inline: auto; text-align: center; margin-bottom: clamp(1.6rem, 3.5vw, 2.6rem); }
 .kaiten .section-sub { margin-inline: auto; }
 .kaiten .section-eyebrow { justify-content: center; }
 
 .kaiten-stage {
+  --plate: clamp(88px, 12.5vw, 122px);
   position: relative;
-  height: clamp(300px, 42vw, 430px);
-  display: grid; place-items: center;
-  perspective: 1400px;
+  width: min(84vw, 470px);
+  aspect-ratio: 1;
+  margin-inline: auto;
   cursor: grab; user-select: none; touch-action: pan-y;
 }
 .kaiten-stage.is-dragging { cursor: grabbing; }
-.kaiten-scene { transform-style: preserve-3d; transform: rotateX(12deg); }
+
+/* Band-Grundfläche (statisch) */
+.kaiten-belt-disc {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    transparent 0 calc(var(--kr, 200px) - var(--plate) * 0.62),
+    rgba(212, 175, 92, 0.35) calc(var(--kr, 200px) - var(--plate) * 0.62) calc(var(--kr, 200px) - var(--plate) * 0.62 + 1px),
+    #191712 calc(var(--kr, 200px) - var(--plate) * 0.62 + 1px) calc(var(--kr, 200px) + var(--plate) * 0.62 - 1px),
+    rgba(212, 175, 92, 0.35) calc(var(--kr, 200px) + var(--plate) * 0.62 - 1px) calc(var(--kr, 200px) + var(--plate) * 0.62),
+    transparent calc(var(--kr, 200px) + var(--plate) * 0.62));
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Rotierender Ring: Streifen + Teller */
 .kaiten-ring {
-  position: relative;
-  width: 0; height: 0;
-  transform-style: preserve-3d;
+  position: absolute; inset: 0;
+  z-index: 2; /* eigener Stacking-Context durch rotate() — muss über dem Zentrum liegen */
   transition: transform 0.9s var(--ease-out);
 }
-.kaiten-ring.no-anim { transition: none; }
+.kaiten-ring.no-anim, .kaiten-ring.no-anim .kaiten-plate { transition: none; }
+.kaiten-belt-stripes {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgba(245, 239, 228, 0.05) 0deg 2.5deg, transparent 2.5deg 9deg);
+  -webkit-mask: radial-gradient(circle,
+    transparent 0 calc(var(--kr, 200px) - var(--plate) * 0.55),
+    #000 calc(var(--kr, 200px) - var(--plate) * 0.55) calc(var(--kr, 200px) + var(--plate) * 0.55),
+    transparent calc(var(--kr, 200px) + var(--plate) * 0.55));
+  mask: radial-gradient(circle,
+    transparent 0 calc(var(--kr, 200px) - var(--plate) * 0.55),
+    #000 calc(var(--kr, 200px) - var(--plate) * 0.55) calc(var(--kr, 200px) + var(--plate) * 0.55),
+    transparent calc(var(--kr, 200px) + var(--plate) * 0.55));
+}
 .kaiten-plate {
-  position: absolute; top: 0; left: 0;
-  width: clamp(170px, 22vw, 230px);
-  margin-left: calc(clamp(170px, 22vw, 230px) / -2);
-  margin-top: calc(clamp(170px, 22vw, 230px) / -2);
-  display: grid; place-items: center;
-  transform-style: preserve-3d;
-  transition: opacity 0.5s ease, filter 0.5s ease;
+  position: absolute; top: 50%; left: 50%;
+  z-index: 2;
+  width: var(--plate);
+  margin: calc(var(--plate) / -2) 0 0 calc(var(--plate) / -2);
+  transition: transform 0.9s var(--ease-out);
 }
 .plate-photo {
   position: relative; display: block;
   width: 100%; aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 26px 38px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
   pointer-events: none;
+  transition: box-shadow 0.5s ease, transform 0.6s var(--ease-out);
 }
 .plate-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .plate-rim {
@@ -458,66 +486,84 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   border-radius: 50%;
   border: 1px solid rgba(212, 175, 92, 0.6);
   box-shadow:
-    inset 0 0 0 5px rgba(15, 14, 11, 0.92),
-    inset 0 0 0 6px rgba(212, 175, 92, 0.45),
-    inset 0 -22px 34px rgba(0, 0, 0, 0.4);
-}
-.kaiten-plate.is-front .plate-photo { box-shadow: 0 32px 46px rgba(0, 0, 0, 0.65), 0 0 40px rgba(212, 175, 92, 0.12); }
-.kaiten-plate .plate-tag {
-  margin-top: 0.5rem;
-  font-family: var(--font-jp);
-  font-size: 0.78rem; letter-spacing: 0.14em;
-  color: var(--paper-faint);
-  pointer-events: none;
+    inset 0 0 0 4px rgba(15, 14, 11, 0.92),
+    inset 0 0 0 5px rgba(212, 175, 92, 0.45),
+    inset 0 -14px 26px rgba(0, 0, 0, 0.35);
 }
 .kaiten-plate.is-front { z-index: 5; }
-.kaiten-plate.is-back { opacity: 0.35; filter: blur(2px) saturate(0.7); }
+.kaiten-plate.is-front .plate-photo {
+  transform: scale(1.16);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.65), 0 0 44px rgba(212, 175, 92, 0.28);
+}
+.kaiten-plate.is-front .plate-rim { border-color: var(--gold); }
+.kaiten-plate .plate-tag {
+  display: block; text-align: center;
+  margin-top: 0.35rem;
+  font-family: var(--font-jp);
+  font-size: 0.72rem; letter-spacing: 0.14em;
+  color: var(--paper-faint);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color 0.4s ease;
+}
+.kaiten-plate.is-front .plate-tag { color: var(--gold); }
 
-.kaiten-belt {
-  position: absolute; left: 50%; bottom: 6%;
-  width: min(760px, 92%); height: 74px;
-  transform: translateX(-50%) perspective(700px) rotateX(56deg);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #24211c, #14120f);
-  border: 1px solid var(--line);
-  overflow: hidden;
+/* Zentrum des Karussells — eigene runde Fläche, damit der Text frei steht */
+.kaiten-center {
+  position: absolute; top: 50%; left: 50%;
+  z-index: 1; /* hinter den Tellern, damit der Verlauf sie nicht anschneidet */
+  width: calc(100% - var(--plate) * 2.05);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: grid; place-content: center;
+  padding: 5%;
+  text-align: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ink-2) 64%, rgba(22, 20, 15, 0) 94%);
+  pointer-events: none;
 }
-.kaiten-belt-lines {
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0 34px, rgba(245, 239, 228, 0.06) 34px 38px);
-  animation: belt-move 2.4s linear infinite;
-}
-@keyframes belt-move { to { transform: translateX(38px); } }
-
-.kaiten-controls {
-  display: flex; align-items: center; justify-content: center;
-  gap: clamp(1rem, 4vw, 2.4rem);
-  margin-top: 1.6rem;
-}
-.kaiten-arrow {
-  display: grid; place-items: center;
-  width: 52px; height: 52px;
-  border: 1px solid var(--line); border-radius: 50%;
-  color: var(--paper);
-  transition: border-color 0.35s ease, background 0.35s ease, transform 0.4s var(--ease-out);
-}
-.kaiten-arrow:hover { border-color: var(--gold); background: rgba(212, 175, 92, 0.12); }
-.kaiten-arrow:active { transform: scale(0.9); }
-.kaiten-caption { min-width: min(300px, 56vw); text-align: center; }
+.kaiten-caption { max-width: 100%; }
 .kaiten-caption-name {
   display: block;
   font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1.15rem, 2.6vw, 1.55rem);
+  font-size: clamp(1.02rem, 2.1vw, 1.35rem);
+  line-height: 1.25;
+  text-wrap: balance;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .kaiten-caption-price {
-  display: block; margin-top: 0.15rem;
+  display: block; margin-top: 0.1rem;
   color: var(--gold); font-weight: 500; letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
   transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
 }
 .kaiten-caption.is-switching .kaiten-caption-name,
 .kaiten-caption.is-switching .kaiten-caption-price { opacity: 0; transform: translateY(8px); }
-.kaiten-add-wrap { display: grid; place-items: center; margin-top: 1.5rem; }
+.kaiten-controls {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(0.8rem, 3vw, 1.6rem);
+  margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
+}
+.kaiten-arrow {
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border: 1px solid var(--line); border-radius: 50%;
+  color: var(--paper);
+  background: rgba(15, 14, 11, 0.5);
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.3s var(--ease-out);
+}
+.kaiten-arrow:hover { border-color: var(--gold); background: rgba(212, 175, 92, 0.12); }
+.kaiten-arrow:active { transform: scale(0.9); }
+
+@media (max-width: 640px) {
+  .kaiten-stage { --plate: clamp(62px, 17vw, 84px); width: min(94vw, 400px); }
+  .kaiten-center { width: calc(100% - var(--plate) * 2.7); }
+  .plate-tag { display: none !important; } /* Name steht mittig — Tags würden kollidieren */
+  .kaiten-caption-name { font-size: 0.98rem; }
+  .kaiten-controls { gap: 0.7rem; }
+  .kaiten-controls .btn { padding: 0.72rem 1.1rem; font-size: 0.82rem; }
+  .kaiten-arrow { width: 42px; height: 42px; }
+}
 
 /* ═══════════ Speisekarte ═══════════ */
 .menu-tabs {
@@ -724,6 +770,64 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .footer-meta a { border-bottom: 1px solid var(--line); transition: color 0.3s ease; }
 .footer-meta a:hover { color: var(--paper); }
+.footer-links {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 0.4rem 1.4rem;
+  margin-top: 0.7rem;
+}
+.footer-links a { border-bottom: none; color: var(--paper-dim); }
+.footer-links a:hover { color: var(--gold); }
+.footer-links a[aria-current="page"] { color: var(--gold); }
+
+/* ═══════════ Rechtsseiten (Impressum & Datenschutz) ═══════════ */
+.legal-wrap {
+  max-width: 780px; margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2rem) clamp(1.2rem, 5vw, 5rem) clamp(3rem, 7vw, 5rem);
+  display: grid; gap: clamp(2.2rem, 5vw, 3.4rem);
+}
+.legal-section .card-ornament { margin-bottom: 1rem; }
+.legal-section h2 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  text-align: center;
+  margin-bottom: 1.1rem;
+}
+.legal-section p { color: var(--paper-dim); margin-bottom: 0.9rem; max-width: 68ch; }
+.legal-section p:last-child { margin-bottom: 0; }
+.legal-address {
+  font-style: normal; color: var(--paper);
+  line-height: 1.9; margin-bottom: 1.3rem;
+}
+.legal-address strong { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; }
+.legal-list { display: grid; gap: 0.6rem; margin-bottom: 1.3rem; }
+.legal-list > div {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dashed var(--line);
+}
+.legal-list dt { min-width: 8ch; color: var(--paper-faint); }
+.legal-list dd a { color: var(--paper); border-bottom: 1px solid rgba(212, 175, 92, 0.4); transition: color 0.3s ease; }
+.legal-list dd a:hover { color: var(--gold); }
+.legal-points { list-style: none; display: grid; gap: 0.85rem; margin-bottom: 1.1rem; }
+.legal-points li {
+  position: relative; padding-left: 1.5rem;
+  color: var(--paper-dim); max-width: 68ch;
+}
+.legal-points li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 7px; height: 7px;
+  border: 1px solid var(--gold); transform: rotate(45deg);
+}
+.legal-points strong { color: var(--paper); font-weight: 500; }
+.legal-todo {
+  padding: 1rem 1.2rem;
+  border: 1px dashed rgba(212, 175, 92, 0.45); border-radius: 14px;
+  background: rgba(212, 175, 92, 0.06);
+  font-size: 0.9rem; line-height: 1.65;
+}
+.legal-todo strong { color: var(--gold); }
+.legal-updated { text-align: center; color: var(--paper-faint); font-size: 0.86rem; }
+.legal-back { display: grid; place-items: center; }
 
 /* ═══════════ Bestellkarte ═══════════ */
 .cart-scrim {
