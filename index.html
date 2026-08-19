@@ -33,7 +33,7 @@
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
       <a href="#kaiten" class="nav-link" data-magnetic>Kaiten</a>
-      <a href="#speisekarte" class="nav-link" data-magnetic>Speisekarte</a>
+      <a href="speisekarte.html" class="nav-link" data-magnetic>Speisekarte</a>
       <a href="#galerie" class="nav-link" data-magnetic>Galerie</a>
       <a href="#philosophie" class="nav-link" data-magnetic>Über uns</a>
       <a href="#kontakt" class="nav-link" data-magnetic>Kontakt</a>
@@ -74,8 +74,12 @@
       </div>
 
       <div class="hero-photo-wrap" aria-hidden="true">
+        <span class="hero-seigaiha" aria-hidden="true"></span>
         <figure class="hero-photo" id="heroPlate">
-          <img src="img/hero.jpg" alt="" width="1200" height="1060" fetchpriority="high">
+          <img class="hero-slide is-active" src="img/hero.jpg" alt="" width="1200" height="1060" fetchpriority="high">
+          <img class="hero-slide" src="img/sushi-2.jpg" alt="" width="1024" height="1024" loading="lazy">
+          <img class="hero-slide" src="img/sushi-3.jpg" alt="" width="1024" height="1024" loading="lazy">
+          <img class="hero-slide" src="img/restaurant-schild.jpg" alt="" width="1100" height="1100" loading="lazy">
           <span class="hero-photo-ring"></span>
         </figure>
         <div class="hero-photo-shadow"></div>
@@ -137,6 +141,8 @@
           <span class="hero-line"><span class="hero-line-inner">Was das Herz</span></span>
           <span class="hero-line"><span class="hero-line-inner"><em class="accent">begehrt.</em></span></span>
         </h2>
+        <p class="section-sub reveal-up">Stöbern Sie hier nach Kategorien — oder öffnen Sie die
+        <a class="inline-link" href="speisekarte.html">komplette Karte auf einer eigenen Seite</a>.</p>
       </div>
 
       <div class="menu-tabs reveal-up" role="tablist" aria-label="Speisekarten-Kategorien">
@@ -296,10 +302,45 @@
         <span>Zwischensumme</span>
         <span class="cart-total" id="cartTotal">0,00 €</span>
       </div>
-      <p class="cart-foot-hint">Abholung &amp; Lieferung: Geben Sie Ihre Auswahl einfach telefonisch durch:</p>
-      <a class="btn btn-primary btn-block" href="tel:+498992740177" data-magnetic><span>089 9274 0177 anrufen</span></a>
+      <button class="btn btn-primary btn-block" id="checkoutToggle" data-magnetic><span>Bestellung aufgeben</span></button>
+
+      <form class="checkout" id="checkoutForm" hidden>
+        <fieldset class="checkout-art">
+          <legend class="sr-only">Abholung oder Lieferung</legend>
+          <label><input type="radio" name="art" value="Abholung" checked><span>Abholung</span></label>
+          <label><input type="radio" name="art" value="Lieferung"><span>Lieferung</span></label>
+        </fieldset>
+        <label class="checkout-field">
+          <span>Ihr Name</span>
+          <input type="text" name="kunde" autocomplete="name" required>
+        </label>
+        <label class="checkout-field">
+          <span>Ihre Telefonnummer</span>
+          <input type="tel" name="telefon" autocomplete="tel" required>
+        </label>
+        <label class="checkout-field checkout-address" hidden>
+          <span>Lieferadresse</span>
+          <input type="text" name="adresse" autocomplete="street-address">
+        </label>
+        <label class="checkout-field">
+          <span>Wunschzeit <em>(optional)</em></span>
+          <input type="text" name="zeit" placeholder="z. B. 19:00 Uhr">
+        </label>
+        <label class="checkout-field">
+          <span>Hinweis <em>(optional)</em></span>
+          <input type="text" name="hinweis" placeholder="z. B. ohne Koriander">
+        </label>
+        <button class="btn btn-primary btn-block" type="submit"><span>Per WhatsApp senden</span></button>
+        <button class="btn btn-ghost btn-block" type="button" id="checkoutCopy"><span>Text kopieren &amp; anrufen</span></button>
+        <p class="checkout-note">Ihre Bestellung wird als fertiger Text erstellt — Sie senden ihn selbst ab,
+        das Restaurant bestätigt kurz zurück. Bezahlt wird bequem bei Abholung oder Lieferung.</p>
+      </form>
+      <p class="checkout-feedback" id="checkoutFeedback" role="status" aria-live="polite"></p>
+
       <div class="cart-partner">
-        <span>oder bestellen über</span>
+        <span>Alternativ:</span>
+        <a href="tel:+498992740177">Anrufen</a>
+        <i>·</i>
         <a href="https://www.lieferando.de/speisekarte/jasuvi" target="_blank" rel="noopener">Lieferando</a>
         <i>·</i>
         <a href="https://wolt.com/de/deu/munich/restaurant/jasuvi" target="_blank" rel="noopener">Wolt</a>

@@ -1,5 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    JaSuVi — Interaktion & Motion
+   Läuft auf index.html und speisekarte.html — Abschnitte, die
+   auf einer Seite fehlen, werden per Element-Guard übersprungen.
    Speisekartendaten: menu-data.js (window.JASUVI_MENU)
    ═══════════════════════════════════════════════════════════ */
 (() => {
@@ -9,70 +11,16 @@
   const finePointer = matchMedia("(pointer: fine)").matches;
   const fmt = (n) => n.toFixed(2).replace(".", ",") + " €";
   const menuData = window.JASUVI_MENU;
+  const WHATSAPP = "498992740177"; // Restaurant-Rufnummer im internationalen Format
 
-  /* ─────────── Kaiten-Teller (SVG-Baukasten) ─────────── */
-  const plateArt = {
-    roll: (fill) => `
-      <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
-        <g>
-          <g transform="translate(56 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120c"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
-          <g transform="translate(100 76)"><ellipse cx="0" cy="16" rx="26" ry="10" fill="#111"/><circle r="26" fill="#15120c"/><circle r="20" fill="#f3ecdc"/><circle r="9" fill="${fill}"/></g>
-          <g transform="translate(144 84)"><ellipse cx="0" cy="14" rx="26" ry="10" fill="#111"/><circle r="24" fill="#15120c"/><circle r="18" fill="#f3ecdc"/><circle r="8" fill="${fill}"/></g>
-        </g>`,
-    nigiri: (fill) => `
-      <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
-        <g transform="translate(64 84) rotate(-8)">
-          <ellipse cx="0" cy="12" rx="34" ry="15" fill="#f3ecdc"/>
-          <path d="M-38 2 Q0 -20 38 2 Q20 12 0 10 Q-20 12 -38 2Z" fill="${fill}"/>
-        </g>
-        <g transform="translate(134 88) rotate(7)">
-          <ellipse cx="0" cy="12" rx="34" ry="15" fill="#f3ecdc"/>
-          <path d="M-38 2 Q0 -20 38 2 Q20 12 0 10 Q-20 12 -38 2Z" fill="${fill}"/>
-          <rect x="-7" y="-14" width="14" height="28" rx="2" fill="#1d3a26" opacity=".85"/>
-        </g>`,
-    bowl: (fill) => `
-      <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="116" rx="80" ry="24" fill="#26231b"/>
-        <path d="M30 78 Q100 150 170 78 Z" fill="#3b3527"/>
-        <path d="M30 78 Q100 150 170 78" fill="none" stroke="#514936" stroke-width="3"/>
-        <ellipse cx="100" cy="78" rx="70" ry="20" fill="#f3ecdc"/>
-        <ellipse cx="76" cy="72" rx="22" ry="10" fill="${fill}"/>
-        <ellipse cx="122" cy="70" rx="20" ry="9" fill="#7fae4e"/>
-        <ellipse cx="104" cy="82" rx="16" ry="7" fill="#d9375e"/>
-        <circle cx="140" cy="80" r="7" fill="#f7d774"/>`,
-    gyoza: (fill) => `
-      <svg viewBox="0 0 200 150" aria-hidden="true">
-        <ellipse cx="100" cy="112" rx="92" ry="30" fill="#26231b"/>
-        <ellipse cx="100" cy="106" rx="92" ry="30" fill="#332f24"/>
-        <ellipse cx="100" cy="106" rx="72" ry="22" fill="none" stroke="#4a4433" stroke-width="2"/>
-        <g fill="${fill}">
-          <path d="M40 96 Q62 68 84 96 Q62 108 40 96Z"/>
-          <path d="M78 88 Q100 60 122 88 Q100 100 78 88Z"/>
-          <path d="M116 96 Q138 68 160 96 Q138 108 116 96Z"/>
-        </g>
-        <g stroke="#b98a4e" stroke-width="2.5" fill="none" opacity=".7">
-          <path d="M50 88 q12 -10 24 0"/><path d="M88 80 q12 -10 24 0"/><path d="M126 88 q12 -10 24 0"/>
-        </g>`
-  };
-
-  // Empfehlungen des Hauses — IDs entsprechen der Speisekarte (menu-data.js)
+  /* ─────────── Kaiten: die Beliebtesten, mit Original-Fotos ─────────── */
   const kaitenDishes = [
-    { id: "s1", name: "Tiger Roll", price: 16.5, art: plateArt.roll("#e8734a"), tag: "タイガー" },
-    { id: "t1", name: "Big Fried Salmon", price: 9.5, art: plateArt.roll("#f0a35e"), tag: "クランチー" },
-    { id: "n1", name: "Sake Nigiri (2 Stk.)", price: 6.5, art: plateArt.nigiri("#e8734a"), tag: "にぎり" },
-    { id: "s6", name: "Dragon Roll", price: 17.5, art: plateArt.roll("#7fae4e"), tag: "ドラゴン" },
-    { id: "b1", name: "Lachs Bowl", price: 16.5, art: plateArt.bowl("#e8734a"), tag: "サーモン丼" },
-    { id: "s2", name: "Double Queen", price: 17.5, art: plateArt.roll("#d4af5c"), tag: "クイーン" },
-    { id: "7", name: "Gyoza (3 Stk.)", price: 7.5, art: plateArt.gyoza("#e9d3a3"), tag: "餃子" },
-    { id: "n8", name: "Aburi Sake Nigiri (2 Stk.)", price: 7.5, art: plateArt.nigiri("#d98a48"), tag: "炙り" },
-    { id: "b5", name: "Yakitori Bowl", price: 16.5, art: plateArt.bowl("#c98a3e"), tag: "焼き鳥丼" },
-    { id: "s10", name: "Duck Queen", price: 17.5, art: plateArt.roll("#b8763a"), tag: "ダック" }
+    { id: "s1", name: "Tiger Roll", price: 16.5, photo: "img/hero.jpg", tag: "タイガー" },
+    { id: "s6", name: "Dragon Roll", price: 17.5, photo: "img/sushi-3.jpg", tag: "ドラゴン" },
+    { id: "t1", name: "Big Fried Salmon", price: 9.5, photo: "img/sushi-1.jpg", tag: "クランチー" },
+    { id: "s2", name: "Double Queen", price: 17.5, photo: "img/sushi-4.jpg", tag: "クイーン" },
+    { id: "152", name: "Sushi-Platte 2", price: 29.5, photo: "img/sushi-2.jpg", tag: "盛り合わせ" },
+    { id: "61", name: "Gà Curry", price: 16.5, photo: "img/gericht-chicken-curry.jpg", tag: "カレー" }
   ];
 
   // Preis-Lookup über die komplette Speisekarte + Kaiten-Band
@@ -82,22 +30,23 @@
       if (typeof d.price === "number") priceBook.set(d.id, { name: d.name, price: d.price });
     });
   });
-  // Kaiten-Namen sind sprechender (z. B. "Sake Nigiri (2 Stk.)" statt "Sake") — sie gewinnen im Warenkorb
   kaitenDishes.forEach((d) => priceBook.set(d.id, { name: d.name, price: priceBook.get(d.id)?.price ?? d.price }));
 
   /* ─────────── Preloader ─────────── */
   const preloader = document.getElementById("preloader");
-  const heroTitle = document.querySelector(".hero-title");
-  const finishPreload = () => {
-    preloader.classList.add("is-done");
-    heroTitle.classList.add("is-revealed");
-    document.querySelectorAll(".hero .reveal-up").forEach((el, i) => {
-      setTimeout(() => el.classList.add("in-view"), 350 + i * 120);
-    });
-    setTimeout(() => preloader.classList.add("is-gone"), 1400);
-  };
-  window.addEventListener("load", () => setTimeout(finishPreload, prefersReducedMotion ? 0 : 1400));
-  setTimeout(finishPreload, 3200); // Fallback, falls "load" hängt
+  if (preloader) {
+    const heroTitle = document.querySelector(".hero-title, .page-title");
+    const finishPreload = () => {
+      preloader.classList.add("is-done");
+      if (heroTitle) heroTitle.classList.add("is-revealed");
+      document.querySelectorAll(".hero .reveal-up, .page-head .reveal-up").forEach((el, i) => {
+        setTimeout(() => el.classList.add("in-view"), 350 + i * 120);
+      });
+      setTimeout(() => preloader.classList.add("is-gone"), 1400);
+    };
+    window.addEventListener("load", () => setTimeout(finishPreload, prefersReducedMotion ? 0 : 1200));
+    setTimeout(finishPreload, 3000); // Fallback, falls "load" hängt
+  }
 
   /* ─────────── Scroll-Reveals ─────────── */
   const revealObserver = new IntersectionObserver((entries) => {
@@ -109,7 +58,7 @@
     });
   }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
   document.querySelectorAll(".reveal-up, .split-lines, .philo-card, .hours-card").forEach((el) => {
-    if (!el.closest(".hero")) revealObserver.observe(el);
+    if (!el.closest(".hero") && !el.closest(".page-head")) revealObserver.observe(el);
   });
 
   /* ─────────── Header ─────────── */
@@ -139,181 +88,238 @@
     });
   }
 
-  /* ─────────── Hero-Foto Tilt ─────────── */
-  const heroPlate = document.getElementById("heroPlate");
-  if (heroPlate && !prefersReducedMotion && finePointer) {
-    const hero = document.getElementById("hero");
-    hero.addEventListener("mousemove", (e) => {
-      const r = hero.getBoundingClientRect();
-      const nx = (e.clientX - r.left) / r.width - 0.5;
-      const ny = (e.clientY - r.top) / r.height - 0.5;
-      heroPlate.style.transform = `rotateY(${nx * 10}deg) rotateX(${-ny * 8}deg)`;
-    });
-    hero.addEventListener("mouseleave", () => { heroPlate.style.transform = ""; });
+  /* ─────────── Hero-Diashow + Tilt ─────────── */
+  const heroFrame = document.getElementById("heroPlate");
+  if (heroFrame) {
+    const slides = [...heroFrame.querySelectorAll(".hero-slide")];
+    if (slides.length > 1 && !prefersReducedMotion) {
+      let current = 0;
+      setInterval(() => {
+        slides[current].classList.remove("is-active");
+        current = (current + 1) % slides.length;
+        slides[current].classList.add("is-active");
+      }, 5200);
+    }
+    if (!prefersReducedMotion && finePointer) {
+      const hero = document.getElementById("hero");
+      hero.addEventListener("mousemove", (e) => {
+        const r = hero.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        heroFrame.style.transform = `rotateY(${nx * 8}deg) rotateX(${-ny * 6}deg)`;
+      });
+      hero.addEventListener("mouseleave", () => { heroFrame.style.transform = ""; });
+    }
   }
 
   /* ─────────── Kaiten-3D-Band ─────────── */
   const ring = document.getElementById("kaitenRing");
-  const stage = document.getElementById("kaitenStage");
-  const caption = document.getElementById("kaitenCaption");
-  const captionName = document.getElementById("kaitenName");
-  const captionPrice = document.getElementById("kaitenPrice");
-  const stepAngle = 360 / kaitenDishes.length;
-  const radius = Math.round(Math.min(420, Math.max(260, window.innerWidth * 0.3)));
+  if (ring) {
+    const stage = document.getElementById("kaitenStage");
+    const caption = document.getElementById("kaitenCaption");
+    const captionName = document.getElementById("kaitenName");
+    const captionPrice = document.getElementById("kaitenPrice");
+    const stepAngle = 360 / kaitenDishes.length;
+    const radius = Math.round(Math.min(400, Math.max(250, window.innerWidth * 0.27)));
+    let ringAngle = 0;
+    let dragging = false;
 
-  let ringAngle = 0;
-
-  kaitenDishes.forEach((dish, i) => {
-    const plate = document.createElement("div");
-    plate.className = "kaiten-plate";
-    plate.dataset.index = i;
-    plate.innerHTML = `${dish.art}</svg><span class="plate-tag">${dish.tag}</span>`;
-    plate.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle}deg)`;
-    ring.appendChild(plate);
-  });
-  const plates = [...ring.children];
-
-  function frontIndex() {
-    const norm = ((-ringAngle % 360) + 360) % 360;
-    return Math.round(norm / stepAngle) % kaitenDishes.length;
-  }
-  function updateKaiten(animateCaption = true) {
-    ring.style.transform = `rotateY(${ringAngle}deg)`;
-    const front = frontIndex();
-    plates.forEach((p, i) => {
-      // Winkelabstand des Tellers zur Front (0 = vorn, 180 = hinten)
-      let d = Math.abs(((i * stepAngle + ringAngle) % 360 + 360) % 360);
-      if (d > 180) d = 360 - d;
-      p.classList.toggle("is-front", i === front);
-      p.classList.toggle("is-back", d > 108);
-      // Teller drehen sich gegen den Ring, damit sie immer zur Kamera schauen
-      p.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle - ringAngle}deg)`;
+    kaitenDishes.forEach((dish, i) => {
+      const plate = document.createElement("div");
+      plate.className = "kaiten-plate";
+      plate.dataset.index = i;
+      plate.innerHTML = `
+        <span class="plate-photo">
+          <img src="${dish.photo}" alt="" loading="lazy" draggable="false">
+          <span class="plate-rim"></span>
+        </span>
+        <span class="plate-tag">${dish.tag}</span>`;
+      plate.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle}deg)`;
+      ring.appendChild(plate);
     });
-    const dish = kaitenDishes[front];
-    if (!animateCaption || prefersReducedMotion) {
-      captionName.textContent = dish.name;
-      captionPrice.textContent = fmt(dish.price);
-      return;
-    }
-    caption.classList.add("is-switching");
-    setTimeout(() => {
-      captionName.textContent = dish.name;
-      captionPrice.textContent = fmt(dish.price);
-      caption.classList.remove("is-switching");
-    }, 220);
-  }
-  updateKaiten(false);
+    const plates = [...ring.children];
 
-  const rotateKaiten = (dir) => { ringAngle += dir * stepAngle; updateKaiten(); };
-  document.getElementById("kaitenPrev").addEventListener("click", () => rotateKaiten(1));
-  document.getElementById("kaitenNext").addEventListener("click", () => rotateKaiten(-1));
-
-  // Drag / Swipe
-  let dragging = false, dragStartX = 0, dragStartAngle = 0, moved = false;
-  const dragStart = (x) => { dragging = true; moved = false; dragStartX = x; dragStartAngle = ringAngle; ring.classList.add("no-anim"); stage.classList.add("is-dragging"); };
-  const dragMove = (x) => {
-    if (!dragging) return;
-    const dx = x - dragStartX;
-    if (Math.abs(dx) > 4) moved = true;
-    ringAngle = dragStartAngle + dx * 0.3;
-    updateKaiten(false);
-  };
-  const dragEnd = () => {
-    if (!dragging) return;
-    dragging = false;
-    ring.classList.remove("no-anim");
-    stage.classList.remove("is-dragging");
-    ringAngle = Math.round(ringAngle / stepAngle) * stepAngle; // einrasten
-    updateKaiten();
-  };
-  stage.addEventListener("pointerdown", (e) => { dragStart(e.clientX); stage.setPointerCapture(e.pointerId); });
-  stage.addEventListener("pointermove", (e) => dragMove(e.clientX));
-  stage.addEventListener("pointerup", dragEnd);
-  stage.addEventListener("pointercancel", dragEnd);
-  stage.addEventListener("click", (e) => {
-    if (moved) return;
-    const plate = e.target.closest(".kaiten-plate");
-    if (!plate) return;
-    const i = Number(plate.dataset.index);
-    // kürzester Weg zum angeklickten Teller
-    const target = -i * stepAngle;
-    let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
-    ringAngle += delta;
-    updateKaiten();
-  });
-
-  // Sanfte Autorotation, solange niemand interagiert
-  if (!prefersReducedMotion) {
-    let idleTimer = null;
-    let autoRotate = setInterval(() => { if (!dragging) rotateKaiten(-1); }, 5000);
-    const pauseAuto = () => {
-      clearInterval(autoRotate);
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        autoRotate = setInterval(() => { if (!dragging) rotateKaiten(-1); }, 5000);
-      }, 12000);
+    const frontIndex = () => {
+      const norm = ((-ringAngle % 360) + 360) % 360;
+      return Math.round(norm / stepAngle) % kaitenDishes.length;
     };
-    ["pointerdown", "click"].forEach((ev) => document.getElementById("kaiten").addEventListener(ev, pauseAuto));
+    function updateKaiten(animateCaption = true) {
+      ring.style.transform = `rotateY(${ringAngle}deg)`;
+      const front = frontIndex();
+      plates.forEach((p, i) => {
+        // Winkelabstand des Tellers zur Front (0 = vorn, 180 = hinten)
+        let d = Math.abs(((i * stepAngle + ringAngle) % 360 + 360) % 360);
+        if (d > 180) d = 360 - d;
+        p.classList.toggle("is-front", i === front);
+        p.classList.toggle("is-back", d > 108);
+        // Teller drehen sich gegen den Ring, damit sie immer zur Kamera schauen
+        p.style.transform = `rotateY(${i * stepAngle}deg) translateZ(${radius}px) rotateY(${-i * stepAngle - ringAngle}deg)`;
+      });
+      const dish = kaitenDishes[front];
+      if (!animateCaption || prefersReducedMotion) {
+        captionName.textContent = dish.name;
+        captionPrice.textContent = fmt(dish.price);
+        return;
+      }
+      caption.classList.add("is-switching");
+      setTimeout(() => {
+        captionName.textContent = dish.name;
+        captionPrice.textContent = fmt(dish.price);
+        caption.classList.remove("is-switching");
+      }, 220);
+    }
+    updateKaiten(false);
+
+    const rotateKaiten = (dir) => { ringAngle += dir * stepAngle; updateKaiten(); };
+    document.getElementById("kaitenPrev").addEventListener("click", () => rotateKaiten(1));
+    document.getElementById("kaitenNext").addEventListener("click", () => rotateKaiten(-1));
+
+    // Drag / Swipe
+    let dragStartX = 0, dragStartAngle = 0, moved = false;
+    const dragStartFn = (x) => { dragging = true; moved = false; dragStartX = x; dragStartAngle = ringAngle; ring.classList.add("no-anim"); stage.classList.add("is-dragging"); };
+    const dragMove = (x) => {
+      if (!dragging) return;
+      const dx = x - dragStartX;
+      if (Math.abs(dx) > 4) moved = true;
+      ringAngle = dragStartAngle + dx * 0.3;
+      updateKaiten(false);
+    };
+    const dragEnd = () => {
+      if (!dragging) return;
+      dragging = false;
+      ring.classList.remove("no-anim");
+      stage.classList.remove("is-dragging");
+      ringAngle = Math.round(ringAngle / stepAngle) * stepAngle; // einrasten
+      updateKaiten();
+    };
+    stage.addEventListener("pointerdown", (e) => { dragStartFn(e.clientX); stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener("pointermove", (e) => dragMove(e.clientX));
+    stage.addEventListener("pointerup", dragEnd);
+    stage.addEventListener("pointercancel", dragEnd);
+    stage.addEventListener("click", (e) => {
+      if (moved) return;
+      const plate = e.target.closest(".kaiten-plate");
+      if (!plate) return;
+      const i = Number(plate.dataset.index);
+      // kürzester Weg zum angeklickten Teller
+      const target = -i * stepAngle;
+      let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
+      ringAngle += delta;
+      updateKaiten();
+    });
+
+    // Sanfte Autorotation, solange niemand interagiert
+    if (!prefersReducedMotion) {
+      let idleTimer = null;
+      let autoRotate = setInterval(() => { if (!dragging) rotateKaiten(-1); }, 5000);
+      const pauseAuto = () => {
+        clearInterval(autoRotate);
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          autoRotate = setInterval(() => { if (!dragging) rotateKaiten(-1); }, 5000);
+        }, 12000);
+      };
+      ["pointerdown", "click"].forEach((ev) => document.getElementById("kaiten").addEventListener(ev, pauseAuto));
+    }
+
+    document.getElementById("kaitenAdd").addEventListener("click", (e) => {
+      const dish = kaitenDishes[frontIndex()];
+      addToCart(dish.id, e.currentTarget);
+    });
   }
 
-  document.getElementById("kaitenAdd").addEventListener("click", (e) => {
-    const dish = kaitenDishes[frontIndex()];
-    addToCart(dish.id, e.currentTarget);
-  });
+  /* ─────────── Speisekarte: Zeilen-Renderer ─────────── */
+  function itemRow(item, delay) {
+    const row = document.createElement("article");
+    row.className = "menu-item";
+    row.style.animationDelay = `${delay}s`;
+    const price = typeof item.price === "number" ? fmt(item.price) : item.priceText;
+    const noLabel = /^\d+$/.test(item.id) ? `<span class="menu-item-no">${item.id}</span>` : "";
+    row.innerHTML = `
+      <div class="menu-item-info">
+        <h4>${noLabel}${item.name}${item.veg ? ' <span class="veg-dot" title="vegetarisch/vegan" role="img" aria-label="vegetarisch"></span>' : ""}</h4>
+        ${item.desc ? `<p>${item.desc}</p>` : ""}
+      </div>
+      <span class="menu-item-price">${price}</span>
+      ${typeof item.price === "number" ? `
+      <button class="menu-item-add" data-id="${item.id}" aria-label="${item.name} auf die Bestellkarte legen">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>` : `<span></span>`}`;
+    return row;
+  }
+  function appendGroup(container, group, delayRef) {
+    const head = document.createElement("div");
+    head.className = "menu-group-head";
+    head.style.animationDelay = `${delayRef.v}s`;
+    head.innerHTML = `<h3>${group.title}</h3>`;
+    container.appendChild(head);
+    delayRef.v = Math.min(delayRef.v + 0.045, 0.5);
+    if (group.note) {
+      const note = document.createElement("p");
+      note.className = "menu-group-note";
+      note.textContent = group.note;
+      note.style.animationDelay = `${delayRef.v}s`;
+      container.appendChild(note);
+    }
+    group.items.forEach((item) => {
+      container.appendChild(itemRow(item, delayRef.v));
+      delayRef.v = Math.min(delayRef.v + 0.045, 0.5);
+    });
+  }
 
-  /* ─────────── Speisekarte ─────────── */
+  /* ─────────── Speisekarte auf der Startseite (Tabs) ─────────── */
   const menuList = document.getElementById("menuList");
-  const tabs = document.querySelectorAll(".menu-tab");
-
-  function renderMenu(cat) {
-    menuList.innerHTML = "";
-    let delay = 0;
-    const step = 0.045;
-    menuData[cat].forEach((group) => {
-      const head = document.createElement("div");
-      head.className = "menu-group-head";
-      head.style.animationDelay = `${delay}s`;
-      head.innerHTML = `<h3>${group.title}</h3>`;
-      menuList.appendChild(head);
-      delay = Math.min(delay + step, 0.55);
-      if (group.note) {
-        const note = document.createElement("p");
-        note.className = "menu-group-note";
-        note.textContent = group.note;
-        note.style.animationDelay = `${delay}s`;
-        menuList.appendChild(note);
-      }
-      group.items.forEach((item) => {
-        const row = document.createElement("article");
-        row.className = "menu-item";
-        row.style.animationDelay = `${delay}s`;
-        delay = Math.min(delay + step, 0.55);
-        const price = typeof item.price === "number" ? fmt(item.price) : item.priceText;
-        const noLabel = /^\d+$/.test(item.id) ? `<span class="menu-item-no">${item.id}</span>` : "";
-        row.innerHTML = `
-          <div class="menu-item-info">
-            <h4>${noLabel}${item.name}${item.veg ? ' <span class="veg-dot" title="vegetarisch/vegan" role="img" aria-label="vegetarisch"></span>' : ""}</h4>
-            ${item.desc ? `<p>${item.desc}</p>` : ""}
-          </div>
-          <span class="menu-item-price">${price}</span>
-          ${typeof item.price === "number" ? `
-          <button class="menu-item-add" data-id="${item.id}" aria-label="${item.name} auf die Bestellkarte legen">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          </button>` : `<span></span>`}`;
-        menuList.appendChild(row);
+  if (menuList) {
+    const tabs = document.querySelectorAll(".menu-tab");
+    const renderMenu = (cat) => {
+      menuList.innerHTML = "";
+      const delayRef = { v: 0 };
+      menuData[cat].forEach((group) => appendGroup(menuList, group, delayRef));
+    };
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => { t.classList.remove("is-active"); t.setAttribute("aria-selected", "false"); });
+        tab.classList.add("is-active");
+        tab.setAttribute("aria-selected", "true");
+        renderMenu(tab.dataset.cat);
       });
     });
+    renderMenu("vorspeisen");
   }
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => { t.classList.remove("is-active"); t.setAttribute("aria-selected", "false"); });
-      tab.classList.add("is-active");
-      tab.setAttribute("aria-selected", "true");
-      renderMenu(tab.dataset.cat);
+
+  /* ─────────── Komplette Karte (speisekarte.html) ─────────── */
+  const fullMenu = document.getElementById("fullMenu");
+  if (fullMenu) {
+    const sections = [
+      ["lunch", "Lunch-Karte", "Täglich 11:30 – 14:45 · außer Sonntag"],
+      ["vorspeisen", "Vorspeisen & Salate", ""],
+      ["hauptgerichte", "Hauptgerichte", "Aus dem Wok, mit frischem Marktgemüse"],
+      ["nudeln", "Nudeln & Reis", "Phở, Bún, Udon & Ramen"],
+      ["sushi", "Sushi", "Nigiri, Sashimi, Maki, Bowls & Inside-Out"],
+      ["rolls", "Special Rolls & Platten", "Nach Jasuvi-Art"],
+      ["suesses", "Dessert & Getränke", ""]
+    ];
+    sections.forEach(([key, title, sub]) => {
+      const sec = document.createElement("section");
+      sec.className = "card-section";
+      sec.id = "karte-" + key;
+      sec.innerHTML = `
+        <header class="card-section-head reveal-up">
+          <span class="card-ornament" aria-hidden="true"></span>
+          <h2>${title}</h2>
+          ${sub ? `<p>${sub}</p>` : ""}
+        </header>`;
+      const list = document.createElement("div");
+      list.className = "menu-list";
+      const delayRef = { v: 0 };
+      menuData[key].forEach((group) => appendGroup(list, group, delayRef));
+      sec.appendChild(list);
+      fullMenu.appendChild(sec);
+      revealObserver.observe(sec.querySelector(".card-section-head"));
     });
-  });
-  renderMenu("vorspeisen");
-  menuList.addEventListener("click", (e) => {
+  }
+
+  document.addEventListener("click", (e) => {
     const btn = e.target.closest(".menu-item-add");
     if (btn) addToCart(btn.dataset.id, btn);
   });
@@ -425,6 +431,64 @@
     if (!btn) return;
     changeQty(btn.closest(".cart-item").dataset.id, btn.dataset.act === "plus" ? 1 : -1);
   });
+
+  /* ─────────── Checkout: Bestellung ohne Backend ───────────
+     Der Gast stellt seine Bestellung zusammen, ergänzt Name,
+     Telefon und Abholung/Lieferung — daraus entsteht ein fertiger
+     Bestelltext, der per WhatsApp gesendet oder beim Anruf
+     vorgelesen/kopiert wird. Kein Server, keine Zahlung nötig:
+     bezahlt wird wie gewohnt bei Abholung bzw. Lieferung. */
+  const checkoutToggle = document.getElementById("checkoutToggle");
+  if (checkoutToggle) {
+    const form = document.getElementById("checkoutForm");
+    const feedback = document.getElementById("checkoutFeedback");
+
+    checkoutToggle.addEventListener("click", () => {
+      const show = form.hidden;
+      form.hidden = !show;
+      checkoutToggle.querySelector("span").textContent = show ? "Formular schließen" : "Bestellung aufgeben";
+      if (show) form.querySelector("input[name='kunde']").focus();
+    });
+
+    form.querySelectorAll("input[name='art']").forEach((radio) => {
+      radio.addEventListener("change", () => {
+        form.querySelector(".checkout-address").hidden = form.art.value !== "Lieferung";
+      });
+    });
+
+    function orderText() {
+      const lines = ["Bestellung an JaSuVi (jasuvi-Website):", ""];
+      cart.forEach((qty, id) => {
+        const { name, price } = priceBook.get(id);
+        lines.push(`${qty}× ${name} — ${fmt(price * qty)}`);
+      });
+      const total = [...cart.entries()].reduce((sum, [id, qty]) => sum + priceBook.get(id).price * qty, 0);
+      lines.push("", `Zwischensumme: ${fmt(total)}`, "");
+      lines.push(`Name: ${form.kunde.value.trim()}`);
+      lines.push(`Telefon: ${form.telefon.value.trim()}`);
+      lines.push(`${form.art.value}${form.art.value === "Lieferung" ? " an: " + form.adresse.value.trim() : ""}`);
+      if (form.zeit.value.trim()) lines.push(`Wunschzeit: ${form.zeit.value.trim()}`);
+      if (form.hinweis.value.trim()) lines.push(`Hinweis: ${form.hinweis.value.trim()}`);
+      return lines.join("\n");
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (cart.size === 0) { feedback.textContent = "Die Bestellkarte ist noch leer."; return; }
+      window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(orderText())}`, "_blank", "noopener");
+      feedback.textContent = "WhatsApp öffnet sich mit Ihrer fertigen Bestellung — nur noch absenden.";
+    });
+
+    document.getElementById("checkoutCopy").addEventListener("click", async () => {
+      if (cart.size === 0) { feedback.textContent = "Die Bestellkarte ist noch leer."; return; }
+      try {
+        await navigator.clipboard.writeText(orderText());
+        feedback.textContent = "Bestelltext kopiert — jetzt anrufen und durchgeben: 089 9274 0177.";
+      } catch {
+        feedback.textContent = "Kopieren nicht möglich — rufen Sie uns einfach an: 089 9274 0177.";
+      }
+    });
+  }
 
   /* ─────────── Sanfte Anker-Navigation ─────────── */
   document.querySelectorAll('a[href^="#"]').forEach((link) => {
