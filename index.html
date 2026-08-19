@@ -172,11 +172,15 @@
       </div>
 
       <div class="kaiten-stage" id="kaitenStage">
-        <!-- Band zuerst: so liegen die Teller darauf und ihre Aufsetzschatten
-             fallen sichtbar auf die Latten. -->
-        <div class="kaiten-belt" aria-hidden="true">
-          <span class="kaiten-belt-slats"></span>
-          <span class="kaiten-belt-sheen"></span>
+        <!-- Zwei getrennte 3D-Ebenen mit gleicher Perspektive: unten die
+             Bandbahn, darüber die Teller. So laufen sie auf derselben
+             Kreisbahn, ohne dass der Browser sich schneidende Flächen
+             sortieren muss — jeder Teller verdeckt das Band hinter sich. -->
+        <div class="kaiten-scene kaiten-scene-floor" aria-hidden="true">
+          <div class="kaiten-track">
+            <span class="kaiten-track-slats"></span>
+            <span class="kaiten-track-sheen"></span>
+          </div>
         </div>
         <div class="kaiten-scene">
           <div class="kaiten-ring" id="kaitenRing"><!-- Teller werden per JS eingesetzt --></div>

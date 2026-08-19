@@ -43,7 +43,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 [hidden] { display: none !important; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Android-WebViews (u. a. der Browser in WhatsApp) vergrößern lange
+     Textblöcke eigenmächtig. Das trifft vor allem die Laufschrift:
+     die Zeile wird breiter, die Naht zwischen den Kopien passt nicht
+     mehr und das Band läuft aus dem Tritt. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -353,7 +361,12 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   padding: 1.1rem 0; overflow: hidden;
   background: var(--ink-2);
 }
-.marquee-track { display: flex; width: max-content; animation: marquee 26s linear infinite; }
+.marquee-track {
+  display: flex; width: max-content;
+  /* Dauer und Versatz setzt app.js aus der gemessenen Breite; die Werte
+     hier greifen nur, solange noch nicht gemessen wurde. */
+  animation: marquee 26s linear infinite;
+}
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-content {
   font-family: var(--font-display); font-weight: 600;
@@ -362,7 +375,7 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   color: var(--paper-dim);
 }
 .marquee-content i { color: var(--gold); font-style: normal; padding: 0 0.6em; }
-@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes marquee { to { transform: translateX(calc(-1 * var(--marquee-shift, 50%))); } }
 
 /* ═══════════ Sections ═══════════ */
 .section { padding: clamp(5rem, 11vw, 9rem) clamp(1.2rem, 5vw, 5rem); }
@@ -506,6 +519,10 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 
 .kaiten-stage {
   --plate: clamp(132px, 15vw, 186px);
+  --bw: calc(var(--plate) * 0.72);          /* halbe Bandbreite — bei 9° Aufsicht
+                                               liegt die Bahn fast waagerecht,
+                                               darum breit angelegt */
+  --track-y: calc(var(--plate) * 0.5);      /* Bandhöhe unter der Tellermitte */
   position: relative;
   height: clamp(310px, 33vw, 410px);
   display: grid; place-items: center;
@@ -516,7 +533,11 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 
 /* Leichte Aufsicht: der vordere Teller rückt nach unten aufs Band,
    die hinteren steigen und treten damit sichtbar zurück. */
-.kaiten-scene { transform-style: preserve-3d; transform: rotateX(-9deg); }
+.kaiten-scene {
+  grid-area: 1 / 1;   /* beide Ebenen teilen sich dieselbe Zelle */
+  position: relative;
+  transform-style: preserve-3d; transform: rotateX(-9deg);
+}
 .kaiten-ring {
   position: relative; width: 0; height: 0;
   transform-style: preserve-3d;
@@ -524,49 +545,62 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .kaiten-ring.no-anim { transition: none; }
 
-/* ── Das Band: gerade Strecke in Untersicht, echte Latten, laufend ── */
-.kaiten-belt {
-  position: absolute; left: 50%; bottom: 7%;
-  width: min(900px, 100%); height: clamp(112px, 12vw, 158px);
-  transform: translateX(-50%) perspective(520px) rotateX(64deg);
-  transform-origin: 50% 100%;
-  background: linear-gradient(180deg, #050403 0%, #0f0d09 18%, #131009 56%, #080705 100%);
-  overflow: hidden;
-  /* Enden ausblenden, damit die Strecke weiterläuft statt abzubrechen */
-  -webkit-mask: linear-gradient(90deg, transparent 0, #000 13%, #000 87%, transparent 100%);
-  mask: linear-gradient(90deg, transparent 0, #000 13%, #000 87%, transparent 100%);
+/* ── Das Band: folgt der Kreisbahn der Teller ──
+   Die Bahn liegt als waagerechter Ring in derselben Szene-Neigung wie
+   das Karussell. Dadurch beschreibt sie exakt den Weg, den die Teller
+   nehmen — die Perspektive bleibt unverändert. */
+.kaiten-scene-floor { pointer-events: none; }
+.kaiten-track {
+  position: absolute; left: 0; top: 0;
+  width: calc(var(--kr, 260px) * 2); height: calc(var(--kr, 260px) * 2);
+  margin: calc(var(--kr, 260px) * -1) 0 0 calc(var(--kr, 260px) * -1);
+  /* erst auf Tellerhöhe absenken, dann flach in die Waagerechte legen */
+  transform: translateY(var(--track-y)) rotateX(90deg);
+  border-radius: 50%;
+  /* Innen weich auslaufend — eine harte Innenkante läse sich als Ring um
+     den vorderen Teller. Außen die helle Schiene, die zur Kamera zeigt. */
+  background: radial-gradient(circle,
+    rgba(13, 11, 7, 0) calc(var(--kr, 260px) - var(--bw)),
+    rgba(13, 11, 7, 0.8) calc(var(--kr, 260px) - var(--bw) + 34px),
+    #0d0b07 calc(var(--kr, 260px) - var(--bw) + 52px),
+    #0d0b07 calc(var(--kr, 260px) + var(--bw) - 4px),
+    rgba(247, 227, 171, 0.82) calc(var(--kr, 260px) + var(--bw) - 3px),
+    rgba(247, 227, 171, 0.82) calc(var(--kr, 260px) + var(--bw) - 0.5px),
+    transparent calc(var(--kr, 260px) + var(--bw)));
 }
-/* Latten: Fuge, angeschrägte Vorderkante, Lattenrücken, Schattenkante.
-   Der Versatz je Durchlauf entspricht exakt der Musterbreite (34px). */
-.kaiten-belt-slats {
-  position: absolute; top: 0; bottom: 0; left: 0; width: 200%;
-  background: repeating-linear-gradient(90deg,
-    #050403 0 2px,
-    #241f16 2px 5px,
-    #191510 5px 13px,
-    #15120c 13px 30px,
-    #0c0a07 30px 34px);
-  animation: belt-run 2.1s linear infinite;
-}
-@keyframes belt-run { to { transform: translateX(-34px); } }
-/* Beleuchtung quer zur Laufrichtung: vordere Kante fängt das Licht */
-.kaiten-belt-sheen {
+/* Latten quer zur Laufrichtung. Der Versatz je Durchlauf entspricht
+   exakt der Musterbreite (6°), damit die Schleife nahtlos schließt. */
+.kaiten-track-slats,
+.kaiten-track-sheen {
   position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.15) 16%, rgba(0, 0, 0, 0) 34%),
-    linear-gradient(0deg, rgba(247, 227, 171, 0.1) 0%, rgba(247, 227, 171, 0.02) 14%, transparent 42%),
-    radial-gradient(120% 80% at 50% 112%, rgba(224, 189, 107, 0.08), transparent 58%);
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(circle,
+    transparent calc(var(--kr, 260px) - var(--bw)),
+    #000 calc(var(--kr, 260px) - var(--bw) + 48px),
+    #000 calc(var(--kr, 260px) + var(--bw) - 4px),
+    transparent calc(var(--kr, 260px) + var(--bw) - 3.5px));
+  mask: radial-gradient(circle,
+    transparent calc(var(--kr, 260px) - var(--bw)),
+    #000 calc(var(--kr, 260px) - var(--bw) + 48px),
+    #000 calc(var(--kr, 260px) + var(--bw) - 4px),
+    transparent calc(var(--kr, 260px) + var(--bw) - 3.5px));
 }
-/* Führungsschienen aus gebürstetem Gold an beiden Kanten */
-.kaiten-belt::before,
-.kaiten-belt::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, transparent 0,
-    rgba(224, 189, 107, 0.45) 16%, rgba(247, 227, 171, 0.72) 50%,
-    rgba(224, 189, 107, 0.45) 84%, transparent 100%);
+.kaiten-track-slats {
+  background: repeating-conic-gradient(
+    #040302 0deg 0.32deg,
+    #362d20 0.32deg 0.9deg,
+    #1e1913 0.9deg 2.1deg,
+    #16120c 2.1deg 5.1deg,
+    #0a0805 5.1deg 6deg);
+  animation: track-run 1.75s linear infinite;
 }
-.kaiten-belt::before { top: 0; height: 2px; opacity: 0.3; }
-.kaiten-belt::after { bottom: 0; height: 4px; opacity: 0.8; }
+@keyframes track-run { to { transform: rotate(-6deg); } }
+/* Licht fällt von vorn: die zur Kamera zeigende Hälfte der Bahn ist heller */
+.kaiten-track-sheen {
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.2) 36%,
+    rgba(247, 227, 171, 0.07) 70%, rgba(247, 227, 171, 0.2) 100%);
+}
 
 /* ── Teller: rundes Foto im Porzellanrand, immer zur Kamera ── */
 .kaiten-plate {
@@ -676,10 +710,10 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 @media (max-width: 760px) {
   .kaiten-stage {
     --plate: clamp(104px, 27vw, 132px);
+    --bw: calc(var(--plate) * 0.62);
     height: clamp(258px, 68vw, 320px);
     perspective: 900px;
   }
-  .kaiten-belt { width: 132%; height: clamp(76px, 21vw, 108px); }
   .kaiten-caption { min-width: 0; flex: 1; }
   .kaiten-controls { gap: 0.7rem; }
   .kaiten-controls .btn { padding: 0.72rem 1.1rem; font-size: 0.82rem; }
@@ -1130,6 +1164,13 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .cart-foot-hint { font-size: 0.84rem; color: var(--paper-faint); margin-bottom: 0.9rem; }
 
 /* ═══════════ Checkout (ohne Backend) ═══════════ */
+.cart-test-note {
+  margin-bottom: 0.9rem; padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(224, 189, 107, 0.5); border-radius: 12px;
+  background: rgba(224, 189, 107, 0.1);
+  color: var(--gold-bright);
+  font-size: 0.8rem; line-height: 1.45; text-align: center;
+}
 .cart-mode-hint {
   font-size: 0.84rem; color: var(--paper-dim);
   text-align: center; margin-bottom: 0.8rem;

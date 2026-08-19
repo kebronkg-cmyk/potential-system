@@ -11,7 +11,14 @@
   const finePointer = matchMedia("(pointer: fine)").matches;
   const fmt = (n) => n.toFixed(2).replace(".", ",") + " €";
   const menuData = window.JASUVI_MENU || {}; // Rechtsseiten laden keine Speisekartendaten
-  const WHATSAPP = "498992740177"; // Restaurant-Rufnummer im internationalen Format
+  /* WhatsApp-Ziel. Zum Ausprobieren lässt sich per ?wa=4915112345678 eine
+     andere Nummer setzen. Das wird in der Bestellkarte deutlich angezeigt:
+     ein untergeschobener Link darf die Vorbestellung mit Name und
+     Rufnummer nicht unbemerkt woanders hin schicken. */
+  const WHATSAPP_HAUS = "498992740177"; // 089 9274 0177 international, ohne führende Null
+  const waParam = (new URLSearchParams(location.search).get("wa") || "").replace(/\D/g, "");
+  const WHATSAPP_TEST = /^\d{8,15}$/.test(waParam) ? waParam : null;
+  const WHATSAPP = WHATSAPP_TEST || WHATSAPP_HAUS;
 
   /* ─────────── Kaiten: die Beliebtesten, mit Original-Fotos ─────────── */
   const kaitenDishes = [
@@ -131,6 +138,29 @@
       : "https://www.google.com/search?q=JaSuVi+Restaurant+Bachbauernstra%C3%9Fe+5+M%C3%BCnchen";
   }
 
+  /* ─────────── Laufschrift: Tempo unabhängig von der Textbreite ───────────
+     Die Dauer stand fest, die Breite der Zeile nicht — sie hängt an
+     Schriftgröße und geladener Schrift, und Android-WebViews blasen
+     Text zusätzlich auf. Dieselben 26 Sekunden über eine breitere Zeile
+     ergeben ein schnelleres Band und eine Naht, die nicht mehr passt.
+     Deshalb werden Versatz und Dauer aus der wirklichen Breite gerechnet. */
+  const marqueeTrack = document.querySelector(".marquee-track");
+  if (marqueeTrack) {
+    const syncMarquee = () => {
+      const copy = marqueeTrack.firstElementChild;
+      if (!copy) return;
+      const width = copy.getBoundingClientRect().width;
+      if (!width) return;
+      const speed = 26 + window.innerWidth * 0.018; // Pixel pro Sekunde
+      marqueeTrack.style.setProperty("--marquee-shift", `${width.toFixed(2)}px`);
+      marqueeTrack.style.animationDuration = `${(width / speed).toFixed(2)}s`;
+    };
+    syncMarquee();
+    // Nach dem Schriftwechsel ist die Zeile anders breit — erneut messen.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncMarquee);
+    window.addEventListener("resize", syncMarquee);
+  }
+
   /* ─────────── Kaiten — Karussell über einem laufenden Band ───────────
      Die Teller sitzen auf einem Ring um die Y-Achse und werden
      gegenrotiert, damit sie immer zur Kamera schauen. Vorne steht der
@@ -167,6 +197,7 @@
     function measure() {
       const plateSize = parseFloat(getComputedStyle(stage).getPropertyValue("--plate")) || 160;
       radius = Math.round(plateSize * 1.45);
+      stage.style.setProperty("--kr", `${radius}px`); // die Bandbahn folgt demselben Radius
     }
     measure();
     window.addEventListener("resize", () => { measure(); updateKaiten(false); });
@@ -650,6 +681,13 @@
   if (checkoutToggle) {
     const form = document.getElementById("checkoutForm");
     const feedback = document.getElementById("checkoutFeedback");
+
+    if (WHATSAPP_TEST) {
+      const note = document.createElement("p");
+      note.className = "cart-test-note";
+      note.textContent = `Testmodus: Die Vorbestellung geht an +${WHATSAPP_TEST} — nicht an das Restaurant.`;
+      document.getElementById("cartFoot").prepend(note);
+    }
 
     checkoutToggle.addEventListener("click", () => {
       const show = form.hidden;
