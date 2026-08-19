@@ -431,6 +431,131 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .philo-card p { color: var(--paper-dim); font-size: 0.97rem; }
 
+/* ═══════════ Bestellen — zwei Wege ═══════════ */
+.ordering {
+  position: relative;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+.ordering::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--seigaiha);
+  background-size: 130px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+.ordering-grid {
+  position: relative;
+  display: grid; gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  max-width: 1280px; margin-inline: auto;
+}
+.ordering-photo {
+  position: relative; margin: 0;
+  border-radius: 26px; overflow: hidden;
+  border: 1px solid var(--line);
+  aspect-ratio: 4 / 5;
+}
+.ordering-photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1.2s var(--ease-out);
+}
+.ordering-photo-frame {
+  position: absolute; inset: 12px;
+  border: 1px solid rgba(224, 189, 107, 0.28);
+  border-radius: 18px;
+  pointer-events: none;
+}
+.ordering-photo::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13, 12, 9, 0) 45%, rgba(13, 12, 9, 0.62) 100%);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ordering-photo:hover img { transform: scale(1.05); }
+}
+.ordering-text .section-title { margin-top: 0.4rem; }
+.ordering-cards {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  margin-top: clamp(1.8rem, 4vw, 2.6rem);
+}
+.ordering-card {
+  position: relative;
+  display: flex; flex-direction: column;
+  padding: 1.9rem 1.7rem 1.7rem;
+  border: 1px solid var(--line); border-radius: 22px;
+  background: linear-gradient(160deg, var(--ink-3), var(--ink));
+  transition: border-color 0.4s ease, opacity 0.9s var(--ease-out),
+              transform 0.9s var(--ease-out);
+}
+.ordering-card:hover { border-color: rgba(224, 189, 107, 0.42); }
+.ordering-card-primary {
+  border-color: rgba(224, 189, 107, 0.4);
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(224, 189, 107, 0.12), transparent 60%),
+    linear-gradient(160deg, var(--ink-3), var(--ink));
+}
+.ordering-card-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; margin-bottom: 1.1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(224, 189, 107, 0.36);
+  color: var(--gold);
+  background: rgba(224, 189, 107, 0.08);
+}
+.ordering-card h3 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 1.28rem; margin-bottom: 0.6rem;
+}
+.ordering-card p {
+  color: var(--paper-dim); font-size: 0.95rem; line-height: 1.65;
+}
+.ordering-card-actions {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-top: auto; padding-top: 1.4rem;
+}
+.partner-links {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: auto; padding-top: 1.4rem;
+}
+.partner-link {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.62rem 0.95rem;
+  border: 1px solid var(--line); border-radius: 999px;
+  color: var(--paper-dim); text-decoration: none;
+  font-size: 0.86rem; font-weight: 500;
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+.partner-link svg { flex: none; opacity: 0.7; }
+.partner-link:hover {
+  color: var(--gold-bright);
+  border-color: rgba(224, 189, 107, 0.5);
+  background: rgba(224, 189, 107, 0.09);
+}
+.partner-link:active { transform: scale(0.97); }
+
+/* Abholhinweis — dezente Zeile unter Band und Karte */
+.pickup-note {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 0.55rem;
+  margin: clamp(1.6rem, 4vw, 2.4rem) auto 0;
+  padding: 0.72rem 1.25rem;
+  max-width: max-content;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(224, 189, 107, 0.05);
+  color: var(--paper-dim);
+  font-size: 0.88rem; line-height: 1.5;
+  text-align: center;
+}
+.pickup-note svg { flex: none; color: var(--gold); }
+.pickup-note strong { color: var(--gold-bright); font-weight: 600; }
+.pickup-note a { color: var(--paper-dim); text-decoration: underline;
+  text-decoration-color: rgba(224, 189, 107, 0.4); text-underline-offset: 3px; }
+.pickup-note a:hover { color: var(--gold-bright); }
+
 /* ═══════════ Kaiten — rundes Band in der Draufsicht ═══════════ */
 .kaiten {
   position: relative;
@@ -1076,44 +1201,6 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 .cart-total.is-bumping { transform: scale(1.12); }
 .cart-foot-hint { font-size: 0.84rem; color: var(--paper-faint); margin-bottom: 0.9rem; }
-/* Weitere Bestellwege in der Bestellkarte */
-.order-ways {
-  margin-top: 1.1rem; padding-top: 1.1rem;
-  border-top: 1px dashed var(--line);
-  display: grid; gap: 0.6rem;
-}
-.order-ways-title {
-  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--paper-faint); text-align: center;
-}
-.order-way {
-  display: flex; align-items: center; gap: 0.7rem;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--line); border-radius: 14px;
-  background: rgba(224, 189, 107, 0.06);
-  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s var(--ease-out);
-}
-.order-way:hover { border-color: var(--gold); background: rgba(224, 189, 107, 0.14); }
-.order-way:active { transform: scale(0.985); }
-.order-way-icon {
-  display: grid; place-items: center; flex: none;
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(160deg, var(--gold-bright), var(--gold) 55%, var(--gold-deep));
-  color: var(--on-gold);
-}
-.order-way-text { flex: 1; display: grid; }
-.order-way-text strong { font-size: 0.94rem; font-weight: 600; }
-.order-way-text small { font-size: 0.76rem; color: var(--paper-faint); }
-.order-way-arrow { flex: none; color: var(--paper-faint); }
-.order-way-row { display: flex; gap: 0.5rem; }
-.order-way-row a {
-  flex: 1; text-align: center;
-  padding: 0.55rem 0.6rem;
-  border: 1px solid var(--line); border-radius: 12px;
-  font-size: 0.84rem; color: var(--paper-dim);
-  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-}
-.order-way-row a:hover { color: var(--gold); border-color: rgba(224, 189, 107, 0.5); background: rgba(224, 189, 107, 0.07); }
 
 /* ═══════════ Checkout (ohne Backend) ═══════════ */
 .cart-mode-hint {
@@ -1441,6 +1528,11 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   background: var(--gold);
   box-shadow: 0 0 18px rgba(224, 189, 107, 0.8);
   pointer-events: none;
+}
+
+@media (max-width: 980px) {
+  .ordering-grid { grid-template-columns: 1fr; }
+  .ordering-photo { aspect-ratio: 16 / 11; max-height: 340px; }
 }
 
 /* ═══════════ Responsive ═══════════ */

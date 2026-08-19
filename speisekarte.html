@@ -22,6 +22,7 @@
       <img class="brand-logo" src="img/logo.png" alt="JaSuVi — Japanisches Restaurant" width="146" height="80">
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="index.html#bestellen" class="nav-link" data-magnetic>Bestellen</a>
       <a href="index.html#kaiten" class="nav-link" data-magnetic>Kaiten</a>
       <a href="speisekarte.html" class="nav-link is-current" data-magnetic aria-current="page">Speisekarte</a>
       <a href="index.html#galerie" class="nav-link" data-magnetic>Galerie</a>
@@ -56,6 +57,13 @@
       </h1>
       <p class="section-sub reveal-up in-view">Ein Gang nach dem anderen — vom Mittagstisch bis zum letzten Glas.
       Wählen Sie oben, was Sie sehen möchten.</p>
+      <p class="pickup-note reveal-up in-view">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 8h12l-1 11a2 2 0 0 1-2 1.8H9A2 2 0 0 1 7 19L6 8Z"/><path d="M9.5 8V6a2.5 2.5 0 0 1 5 0v2"/>
+        </svg>
+        <span>Die Bestellkarte sammelt Ihre Auswahl zur <strong>Abholung</strong> in Pasing.
+        Lieferung läuft über <a href="index.html#bestellen">unsere Partner</a>.</span>
+      </p>
     </section>
 
     <!-- ══════════ Gang-Navigator (chronologisch) ══════════ -->
@@ -150,25 +158,6 @@
       </form>
       <p class="checkout-feedback" id="checkoutFeedback" role="status" aria-live="polite"></p>
 
-      <div class="order-ways">
-        <p class="order-ways-title">Lieber liefern lassen?</p>
-        <a class="order-way" href="https://www.jasuvi-munchen.de/" target="_blank" rel="noopener">
-          <span class="order-way-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 16V7h11v9M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/>
-            </svg>
-          </span>
-          <span class="order-way-text">
-            <strong>Unser Bestellshop</strong>
-            <small>jasuvi-munchen.de · mit Bezahlung</small>
-          </span>
-          <svg class="order-way-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </a>
-        <div class="order-way-row">
-          <a href="https://wolt.com/de/deu/munich/restaurant/jasuvi" target="_blank" rel="noopener">Wolt</a>
-          <a href="https://www.lieferando.de/speisekarte/jasuvi" target="_blank" rel="noopener">Lieferando</a>
-        </div>
-      </div>
     </footer>
   </aside>
 
