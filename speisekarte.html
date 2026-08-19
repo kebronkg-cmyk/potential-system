@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speisekarte — JaSuVi München-Pasing</title>
+  <meta name="description" content="Die komplette Speisekarte des JaSuVi München-Pasing: Lunch, Vorspeisen, Hauptgerichte, Phở &amp; Bún, Sushi, Special Rolls, Platten, Dessert und Getränke.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23c9a24b'/><circle cx='50' cy='50' r='20' fill='%230f0e0b'/></svg>">
+</head>
+<body>
+
+  <!-- ══════════ Grain ══════════ -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ══════════ Header ══════════ -->
+  <header class="site-header is-scrolled" id="siteHeader">
+    <a class="brand" href="index.html" data-magnetic>
+      <img class="brand-logo" src="img/logo.png" alt="JaSuVi — Japanisches Restaurant" width="146" height="80">
+    </a>
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="index.html#kaiten" class="nav-link" data-magnetic>Kaiten</a>
+      <a href="speisekarte.html" class="nav-link is-current" data-magnetic aria-current="page">Speisekarte</a>
+      <a href="index.html#galerie" class="nav-link" data-magnetic>Galerie</a>
+      <a href="index.html#philosophie" class="nav-link" data-magnetic>Über uns</a>
+      <a href="index.html#kontakt" class="nav-link" data-magnetic>Kontakt</a>
+    </nav>
+    <div class="header-actions">
+    <a class="header-phone" href="tel:+498992740177" data-magnetic aria-label="Anrufen: 089 9274 0177">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.6 3.5h3l1.5 3.8-1.9 1.1a12 12 0 0 0 5.4 5.4l1.1-1.9 3.8 1.5v3a1.6 1.6 0 0 1-1.7 1.6A16.5 16.5 0 0 1 5 6.2 1.6 1.6 0 0 1 6.6 3.5Z"/>
+      </svg>
+      <span>089 9274 0177</span>
+    </a>
+    <button class="cart-toggle" id="cartToggle" data-magnetic aria-label="Bestellkarte öffnen">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4 7Z"/>
+        <path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"/>
+      </svg>
+      <span class="cart-label">Bestellkarte</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ══════════ Seitenkopf ══════════ -->
+    <section class="page-head">
+      <span class="page-seigaiha" aria-hidden="true"></span>
+      <p class="section-eyebrow reveal-up in-view"><span class="eyebrow-dot"></span>JaSuVi · München-Pasing</p>
+      <h1 class="page-title section-title is-revealed">
+        <span class="hero-line"><span class="hero-line-inner">Die <em class="accent">Karte.</em></span></span>
+      </h1>
+      <p class="section-sub reveal-up in-view">Ein Gang nach dem anderen — vom Mittagstisch bis zum letzten Glas.
+      Wählen Sie oben, was Sie sehen möchten.</p>
+    </section>
+
+    <!-- ══════════ Gang-Navigator (chronologisch) ══════════ -->
+    <!-- Fester Anker: sticky-Elemente melden beim Scrollen ihre Klebeposition,
+         nicht ihre Layout-Position — dieser Punkt bleibt stabil. -->
+    <span class="course-anchor" id="courseAnchor" aria-hidden="true"></span>
+    <nav class="course-nav" id="courseNav" aria-label="Gänge">
+      <div class="course-nav-inner" id="courseNavInner"><!-- per JS gerendert --></div>
+    </nav>
+
+    <!-- ══════════ Der gewählte Gang ══════════ -->
+    <div class="course-stage" id="courseStage"><!-- per JS gerendert --></div>
+
+    <!-- ══════════ Footer ══════════ -->
+    <footer class="footer">
+      <div class="footer-word" aria-hidden="true">JaSuVi</div>
+      <div class="footer-meta">
+        <span>© 2026 Jasuvi Restaurant · Alle Rechte vorbehalten</span>
+        <span>Bachbauernstraße 5 · 81241 München · <a href="tel:+498992740177">089 9274 0177</a></span>
+        <span>いただきます — Guten Appetit!</span>
+        <nav class="footer-links" aria-label="Rechtliches">
+          <a href="speisekarte.html">Speisekarte</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="impressum.html#datenschutz">Datenschutz</a>
+        </nav>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ══════════ Zurück zum Navigator ══════════ -->
+  <button class="to-top" id="toTop" aria-label="Zurück zur Gang-Auswahl">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    <span>Gänge</span>
+  </button>
+
+  <!-- ══════════ Bestellkarte ══════════ -->
+  <div class="cart-scrim" id="cartScrim"></div>
+  <aside class="cart" id="cart" aria-label="Bestellkarte" aria-hidden="true">
+    <header class="cart-head">
+      <div>
+        <h2 class="cart-title">Bestellkarte</h2>
+        <p class="cart-subtitle">注文カード · Ihre Auswahl</p>
+      </div>
+      <button class="cart-close" id="cartClose" data-magnetic aria-label="Bestellkarte schließen">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 120 120" width="110" height="110" aria-hidden="true">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="2" stroke-dasharray="4 7"/>
+        <g opacity=".55">
+          <circle cx="60" cy="60" r="26" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="60" cy="60" r="10" fill="currentColor" fill-opacity=".35"/>
+        </g>
+      </svg>
+      <p>Ihre Bestellkarte ist noch leer.</p>
+      <p class="cart-empty-hint">Legen Sie Gerichte aus der Karte darauf.</p>
+    </div>
+
+    <ul class="cart-items" id="cartItems"></ul>
+
+    <footer class="cart-foot" id="cartFoot">
+      <div class="cart-total-row">
+        <span>Zwischensumme</span>
+        <span class="cart-total" id="cartTotal">0,00 €</span>
+      </div>
+      <button class="btn btn-primary btn-block" id="checkoutToggle" data-magnetic><span>Bestellung aufgeben</span></button>
+
+      <form class="checkout" id="checkoutForm" hidden>
+        <fieldset class="checkout-art">
+          <legend class="sr-only">Abholung oder Lieferung</legend>
+          <label><input type="radio" name="art" value="Abholung" checked><span>Abholung</span></label>
+          <label><input type="radio" name="art" value="Lieferung"><span>Lieferung</span></label>
+        </fieldset>
+        <label class="checkout-field">
+          <span>Ihr Name</span>
+          <input type="text" name="kunde" autocomplete="name" required>
+        </label>
+        <label class="checkout-field">
+          <span>Ihre Telefonnummer</span>
+          <input type="tel" name="telefon" autocomplete="tel" required>
+        </label>
+        <label class="checkout-field checkout-address" hidden>
+          <span>Lieferadresse</span>
+          <input type="text" name="adresse" autocomplete="street-address">
+        </label>
+        <label class="checkout-field">
+          <span>Wunschzeit <em>(optional)</em></span>
+          <input type="text" name="zeit" placeholder="z. B. 19:00 Uhr">
+        </label>
+        <label class="checkout-field">
+          <span>Hinweis <em>(optional)</em></span>
+          <input type="text" name="hinweis" placeholder="z. B. ohne Koriander">
+        </label>
+        <button class="btn btn-primary btn-block" type="submit"><span>Per WhatsApp senden</span></button>
+        <button class="btn btn-ghost btn-block" type="button" id="checkoutCopy"><span>Text kopieren &amp; anrufen</span></button>
+        <p class="checkout-note">Ihre Bestellung wird als fertiger Text erstellt — Sie senden ihn selbst ab,
+        das Restaurant bestätigt kurz zurück. Bezahlt wird bequem bei Abholung oder Lieferung.</p>
+      </form>
+      <p class="checkout-feedback" id="checkoutFeedback" role="status" aria-live="polite"></p>
+
+      <div class="order-ways">
+        <p class="order-ways-title">Lieber online mit Bezahlung?</p>
+        <a class="order-way" href="https://www.jasuvi-munchen.de/" target="_blank" rel="noopener">
+          <span class="order-way-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4 7Z"/><path d="M8.5 10V6a3.5 3.5 0 0 1 7 0v4"/>
+            </svg>
+          </span>
+          <span class="order-way-text">
+            <strong>Unser Bestellshop</strong>
+            <small>jasuvi-munchen.de</small>
+          </span>
+          <svg class="order-way-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+        <div class="order-way-row">
+          <a href="https://wolt.com/de/deu/munich/restaurant/jasuvi" target="_blank" rel="noopener">Wolt</a>
+          <a href="https://www.lieferando.de/speisekarte/jasuvi" target="_blank" rel="noopener">Lieferando</a>
+        </div>
+      </div>
+    </footer>
+  </aside>
+
+  <script src="menu-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
