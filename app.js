@@ -646,44 +646,37 @@
     checkoutToggle.addEventListener("click", () => {
       const show = form.hidden;
       form.hidden = !show;
-      checkoutToggle.querySelector("span").textContent = show ? "Formular schließen" : "Bestellung aufgeben";
+      checkoutToggle.querySelector("span").textContent = show ? "Formular schließen" : "Zur Abholung vorbestellen";
       if (show) form.querySelector("input[name='kunde']").focus();
     });
 
-    form.querySelectorAll("input[name='art']").forEach((radio) => {
-      radio.addEventListener("change", () => {
-        form.querySelector(".checkout-address").hidden = form.art.value !== "Lieferung";
-      });
-    });
-
     function orderText() {
-      const lines = ["Bestellung an JaSuVi (jasuvi-Website):", ""];
+      const lines = ["Vorbestellung zur Abholung — JaSuVi:", ""];
       cart.forEach((qty, id) => {
         const { name, price } = priceBook.get(id);
         lines.push(`${qty}× ${name} — ${fmt(price * qty)}`);
       });
       const total = [...cart.entries()].reduce((sum, [id, qty]) => sum + priceBook.get(id).price * qty, 0);
-      lines.push("", `Zwischensumme: ${fmt(total)}`, "");
+      lines.push("", `Summe: ${fmt(total)}`, "");
       lines.push(`Name: ${form.kunde.value.trim()}`);
       lines.push(`Telefon: ${form.telefon.value.trim()}`);
-      lines.push(`${form.art.value}${form.art.value === "Lieferung" ? " an: " + form.adresse.value.trim() : ""}`);
-      if (form.zeit.value.trim()) lines.push(`Wunschzeit: ${form.zeit.value.trim()}`);
+      lines.push(form.zeit.value.trim() ? `Abholung um: ${form.zeit.value.trim()}` : "Abholung: so bald wie möglich");
       if (form.hinweis.value.trim()) lines.push(`Hinweis: ${form.hinweis.value.trim()}`);
       return lines.join("\n");
     }
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (cart.size === 0) { feedback.textContent = "Die Bestellkarte ist noch leer."; return; }
+      if (cart.size === 0) { feedback.textContent = "Ihre Abholung ist noch leer."; return; }
       window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(orderText())}`, "_blank", "noopener");
-      feedback.textContent = "WhatsApp öffnet sich mit Ihrer fertigen Bestellung — nur noch absenden.";
+      feedback.textContent = "WhatsApp öffnet sich mit Ihrer Vorbestellung — nur noch absenden.";
     });
 
     document.getElementById("checkoutCopy").addEventListener("click", async () => {
-      if (cart.size === 0) { feedback.textContent = "Die Bestellkarte ist noch leer."; return; }
+      if (cart.size === 0) { feedback.textContent = "Ihre Abholung ist noch leer."; return; }
       try {
         await navigator.clipboard.writeText(orderText());
-        feedback.textContent = "Bestelltext kopiert — jetzt anrufen und durchgeben: 089 9274 0177.";
+        feedback.textContent = "Text kopiert — jetzt anrufen und durchgeben: 089 9274 0177.";
       } catch {
         feedback.textContent = "Kopieren nicht möglich — rufen Sie uns einfach an: 089 9274 0177.";
       }
