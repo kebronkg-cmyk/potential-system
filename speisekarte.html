@@ -46,33 +46,17 @@
       <h1 class="page-title section-title is-revealed">
         <span class="hero-line"><span class="hero-line-inner">Die <em class="accent">Karte.</em></span></span>
       </h1>
-      <p class="section-sub reveal-up in-view">Alle Gerichte und Getränke mit Preisen — legen Sie Ihre Auswahl direkt
-      auf die Bestellkarte oder rufen Sie uns an: <a class="inline-link" href="tel:+498992740177">089 9274 0177</a>.</p>
-      <nav class="card-jump reveal-up in-view" aria-label="Kategorien">
-        <a href="#karte-lunch">Lunch</a>
-        <a href="#karte-vorspeisen">Vorspeisen</a>
-        <a href="#karte-hauptgerichte">Hauptgerichte</a>
-        <a href="#karte-nudeln">Nudeln &amp; Reis</a>
-        <a href="#karte-sushi">Sushi</a>
-        <a href="#karte-rolls">Special Rolls</a>
-        <a href="#karte-suesses">Dessert &amp; Getränke</a>
-      </nav>
+      <p class="section-sub reveal-up in-view">Ein Gang nach dem anderen — vom Mittagstisch bis zum letzten Glas.
+      Wählen Sie oben, was Sie sehen möchten.</p>
     </section>
 
-    <!-- ══════════ Foto-Streifen ══════════ -->
-    <div class="card-strip" aria-hidden="true">
-      <img src="img/sushi-1.jpg" alt="" loading="lazy">
-      <img src="img/gericht-chicken-curry.jpg" alt="" loading="lazy">
-      <img src="img/sushi-3.jpg" alt="" loading="lazy">
-      <img src="img/sushi-4.jpg" alt="" loading="lazy">
-    </div>
+    <!-- ══════════ Gang-Navigator (chronologisch) ══════════ -->
+    <nav class="course-nav" id="courseNav" aria-label="Gänge">
+      <div class="course-nav-inner" id="courseNavInner"><!-- per JS gerendert --></div>
+    </nav>
 
-    <!-- ══════════ Komplette Karte ══════════ -->
-    <div class="card-wrap" id="fullMenu"><!-- per JS gerendert --></div>
-
-    <p class="menu-note card-note">Alle Preise inkl. MwSt. · Lunch-Karte täglich 11:30 – 14:45 (außer Sonntag) ·
-    Vegetarische &amp; vegane Gerichte sind mit <span class="veg-dot" aria-hidden="true"></span> markiert ·
-    Allergene &amp; Zusatzstoffe nennen wir Ihnen gern telefonisch unter <a href="tel:+498992740177">089 9274 0177</a>.</p>
+    <!-- ══════════ Der gewählte Gang ══════════ -->
+    <div class="course-stage" id="courseStage"><!-- per JS gerendert --></div>
 
     <!-- ══════════ Footer ══════════ -->
     <footer class="footer">
@@ -89,6 +73,12 @@
       </div>
     </footer>
   </main>
+
+  <!-- ══════════ Zurück zum Navigator ══════════ -->
+  <button class="to-top" id="toTop" aria-label="Zurück zur Gang-Auswahl">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    <span>Gänge</span>
+  </button>
 
   <!-- ══════════ Bestellkarte ══════════ -->
   <div class="cart-scrim" id="cartScrim"></div>

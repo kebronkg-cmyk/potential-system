@@ -17,7 +17,7 @@
   const kaitenDishes = [
     { id: "s1", name: "Tiger Roll", price: 16.5, photo: "img/hero.jpg", tag: "タイガー" },
     { id: "s6", name: "Dragon Roll", price: 17.5, photo: "img/sushi-3.jpg", tag: "ドラゴン" },
-    { id: "t1", name: "Big Fried Salmon", price: 9.5, photo: "img/sushi-1.jpg", tag: "クランチー" },
+    { id: "s15", name: "King Roll", price: 17.0, photo: "img/sushi-1.jpg", tag: "キング" },
     { id: "s2", name: "Double Queen", price: 17.5, photo: "img/sushi-4.jpg", tag: "クイーン" },
     { id: "152", name: "Sushi-Platte 2", price: 29.5, photo: "img/sushi-2.jpg", tag: "盛り合わせ" },
     { id: "61", name: "Gà Curry", price: 16.5, photo: "img/gericht-chicken-curry.jpg", tag: "カレー" }
@@ -224,12 +224,20 @@
       const plate = e.target.closest(".kaiten-plate");
       if (!plate) return;
       const i = Number(plate.dataset.index);
-      // kürzester Weg: angeklickten Teller auf die 6-Uhr-Position drehen
+      // Teller vorne: Großansicht öffnen. Sonst erst nach vorne drehen.
+      if (i === frontIndex()) { openLightbox(i); return; }
       const target = FRONT_AT - i * stepAngle;
       let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
       ringAngle += delta;
       updateKaiten();
     });
+    // Von außen ansteuerbar, damit die Großansicht das Band mitdreht
+    window.__kaitenGoTo = (i) => {
+      const target = FRONT_AT - i * stepAngle;
+      let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
+      ringAngle += delta;
+      updateKaiten();
+    };
 
     // Sanfte Autorotation, solange niemand interagiert
     if (!prefersReducedMotion) {
@@ -310,36 +318,122 @@
     renderMenu("vorspeisen");
   }
 
-  /* ─────────── Komplette Karte (speisekarte.html) ─────────── */
-  const fullMenu = document.getElementById("fullMenu");
-  if (fullMenu) {
-    const sections = [
-      ["lunch", "Lunch-Karte", "Täglich 11:30 – 14:45 · außer Sonntag"],
-      ["vorspeisen", "Vorspeisen & Salate", ""],
-      ["hauptgerichte", "Hauptgerichte", "Aus dem Wok, mit frischem Marktgemüse"],
-      ["nudeln", "Nudeln & Reis", "Phở, Bún, Udon & Ramen"],
-      ["sushi", "Sushi", "Nigiri, Sashimi, Maki, Bowls & Inside-Out"],
-      ["rolls", "Special Rolls & Platten", "Nach Jasuvi-Art"],
-      ["suesses", "Dessert & Getränke", ""]
+  /* ─────────── Karten-Seite: Gänge im Tagesverlauf ───────────
+     Statt einer endlosen Liste zeigt die Seite genau einen Gang.
+     Die Reihenfolge folgt dem Tag: Mittagstisch, Auftakt, Sushi,
+     Signature Rolls, Wok, Nudeln, Dessert, Getränke. */
+  const courseStage = document.getElementById("courseStage");
+  if (courseStage) {
+    const courses = [
+      { key: "lunch", time: "11:30 – 14:45", title: "Mittagstisch", sub: "Unsere Lunch-Karte, werktags bis 14:45 Uhr", icon: "sun" },
+      { key: "vorspeisen", time: "Zum Auftakt", title: "Vorspeisen, Suppen & Salate", sub: "Kleine Gerichte zum Ankommen", icon: "bowl" },
+      { key: "sushi", time: "Erster Gang", title: "Sushi & Sashimi", sub: "Nigiri, Sashimi, Maki, Inside-Out und Bowls", icon: "fish" },
+      { key: "rolls", time: "Das Aushängeschild", title: "Signature Rolls & Platten", sub: "Crunchy Rolls, Special Rolls und Platten zum Teilen", icon: "star" },
+      { key: "hauptgerichte", time: "Hauptgang", title: "Aus dem Wok", title2: true, sub: "Huhn, Rind, Ente, Lachs, Garnelen und Tofu", icon: "flame" },
+      { key: "nudeln", time: "Hauptgang", title: "Nudeln & Reis", sub: "Phở, Bún, Udon, Ramen und gebratener Reis", icon: "noodle" },
+      { key: "dessert", time: "Zum Abschluss", title: "Dessert", sub: "Süßes aus Japan und Vietnam", icon: "sweet" },
+      { key: "getraenke", time: "Den ganzen Abend", title: "Getränke", sub: "Softdrinks, Tee, Bier, Cocktails und Wein", icon: "glass" }
     ];
-    sections.forEach(([key, title, sub]) => {
-      const sec = document.createElement("section");
-      sec.className = "card-section";
-      sec.id = "karte-" + key;
-      sec.innerHTML = `
-        <header class="card-section-head reveal-up">
-          <span class="card-ornament" aria-hidden="true"></span>
-          <h2>${title}</h2>
-          ${sub ? `<p>${sub}</p>` : ""}
-        </header>`;
-      const list = document.createElement("div");
-      list.className = "menu-list";
-      const delayRef = { v: 0 };
-      menuData[key].forEach((group) => appendGroup(list, group, delayRef));
-      sec.appendChild(list);
-      fullMenu.appendChild(sec);
-      revealObserver.observe(sec.querySelector(".card-section-head"));
+    const icons = {
+      sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+      bowl: '<path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M12 4c1.5 1 1.5 2.5 0 3.5"/>',
+      fish: '<path d="M3 12c4-6 12-6 18 0-6 6-14 6-18 0Z"/><circle cx="16" cy="11" r=".8" fill="currentColor"/>',
+      star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8L12 16.9 6.7 19.6l1.1-5.8L3.5 9.7l5.9-.8Z"/>',
+      flame: '<path d="M12 3s5 4 5 8.5A5 5 0 0 1 7 11.5C7 8 10 6.5 10 4c0 0 2 1 2 3"/>',
+      noodle: '<path d="M4 8h16M4 12h16M4 16h16"/><path d="M8 8v10M16 8v10"/>',
+      sweet: '<circle cx="12" cy="13" r="6"/><path d="M9 7c1-2 5-2 6 0"/>',
+      glass: '<path d="M6 4h12l-5 8v6h3M11 18H8"/><path d="M6 4l6 8"/>'
+    };
+
+    const navInner = document.getElementById("courseNavInner");
+    const courseNav = document.getElementById("courseNav");
+
+    courses.forEach((c, i) => {
+      const b = document.createElement("button");
+      b.className = "course-chip" + (i === 0 ? " is-active" : "");
+      b.dataset.course = c.key;
+      b.innerHTML = `
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[c.icon]}</svg>
+        <span class="course-chip-text">
+          <span class="course-chip-time">${c.time}</span>
+          <span class="course-chip-title">${c.title}</span>
+        </span>`;
+      navInner.appendChild(b);
     });
+
+    function renderCourse(key) {
+      const c = courses.find((x) => x.key === key);
+      courseStage.innerHTML = "";
+      const sec = document.createElement("section");
+      sec.className = "course-panel";
+      sec.innerHTML = `
+        <header class="course-head">
+          <span class="card-ornament" aria-hidden="true"></span>
+          <p class="course-time">${c.time}</p>
+          <h2>${c.title}</h2>
+          <p class="course-sub">${c.sub}</p>
+        </header>`;
+      const groups = menuData[key];
+      const wrap = document.createElement("div");
+      wrap.className = "course-groups";
+      groups.forEach((group, gi) => {
+        const det = document.createElement("details");
+        det.className = "course-group";
+        det.open = groups.length === 1 || gi === 0;
+        det.style.animationDelay = `${Math.min(gi * 0.05, 0.3)}s`;
+        const list = document.createElement("div");
+        list.className = "menu-list";
+        const delayRef = { v: 0 };
+        group.items.forEach((item) => {
+          list.appendChild(itemRow(item, delayRef.v));
+          delayRef.v = Math.min(delayRef.v + 0.035, 0.4);
+        });
+        det.innerHTML = `
+          <summary>
+            <span class="course-group-title">${group.title}</span>
+            <span class="course-group-count">${group.items.length}</span>
+            <svg class="course-group-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>`;
+        if (group.note) {
+          const note = document.createElement("p");
+          note.className = "menu-group-note";
+          note.textContent = group.note;
+          det.appendChild(note);
+        }
+        det.appendChild(list);
+        wrap.appendChild(det);
+      });
+      sec.appendChild(wrap);
+      courseStage.appendChild(sec);
+    }
+
+    navInner.addEventListener("click", (e) => {
+      const chip = e.target.closest(".course-chip");
+      if (!chip) return;
+      navInner.querySelectorAll(".course-chip").forEach((c) => c.classList.remove("is-active"));
+      chip.classList.add("is-active");
+      renderCourse(chip.dataset.course);
+      const navTop = courseNav.getBoundingClientRect().top + window.scrollY - 70;
+      if (window.scrollY > navTop) window.scrollTo({ top: navTop, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      chip.scrollIntoView({ inline: "center", block: "nearest", behavior: prefersReducedMotion ? "auto" : "smooth" });
+    });
+    renderCourse("lunch");
+
+    // Zurück-zum-Navigator-Pfeil
+    const toTop = document.getElementById("toTop");
+    if (toTop) {
+      toTop.addEventListener("click", () => {
+        const navTop = courseNav.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: navTop, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      });
+      // Der Navigator klebt oben; der Pfeil bringt einen zusätzlich
+      // aus tieferen Gängen in einem Sprung zurück nach oben.
+      const toggleToTop = () => {
+        toTop.classList.toggle("is-visible", window.scrollY > 900);
+      };
+      window.addEventListener("scroll", toggleToTop, { passive: true });
+      toggleToTop();
+    }
   }
 
   document.addEventListener("click", (e) => {
@@ -457,6 +551,57 @@
       cartItemsEl.appendChild(li);
     });
   }
+  /* ─────────── Teller-Großansicht ───────────
+     Zeigt das Foto des Gerichts groß als Teller, mit Beschreibung
+     aus der Speisekarte und direktem Weg auf die Bestellkarte. */
+  const lightbox = document.getElementById("lightbox");
+  let lbIndex = 0;
+  function openLightbox(i) {
+    if (!lightbox) return;
+    lbIndex = ((i % kaitenDishes.length) + kaitenDishes.length) % kaitenDishes.length;
+    const dish = kaitenDishes[lbIndex];
+    const entry = priceBook.get(dish.id);
+    // Beschreibung aus der Speisekarte nachschlagen
+    let desc = "";
+    Object.values(menuData).flat().forEach((group) => {
+      const hit = group.items.find((it) => it.id === dish.id);
+      if (hit && hit.desc) desc = hit.desc;
+    });
+    document.getElementById("lightboxImg").src = dish.photo;
+    document.getElementById("lightboxImg").alt = dish.name;
+    document.getElementById("lightboxTag").textContent = dish.tag;
+    document.getElementById("lightboxName").textContent = dish.name;
+    document.getElementById("lightboxDesc").textContent = desc;
+    document.getElementById("lightboxPrice").textContent = fmt(entry ? entry.price : dish.price);
+    lightbox.classList.add("is-open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    document.getElementById("lightboxClose").focus();
+    if (window.__kaitenGoTo) window.__kaitenGoTo(lbIndex);
+  }
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  if (lightbox) {
+    document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
+    document.getElementById("lightboxPrev").addEventListener("click", () => openLightbox(lbIndex - 1));
+    document.getElementById("lightboxNext").addEventListener("click", () => openLightbox(lbIndex + 1));
+    lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.getElementById("lightboxAdd").addEventListener("click", (e) => {
+      addToCart(kaitenDishes[lbIndex].id, e.currentTarget);
+      closeLightbox();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("is-open")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") openLightbox(lbIndex - 1);
+      if (e.key === "ArrowRight") openLightbox(lbIndex + 1);
+    });
+  }
+
   /* ─────────── Checkout: Bestellung ohne Backend ───────────
      Der Gast stellt seine Bestellung zusammen, ergänzt Name,
      Telefon und Abholung/Lieferung — daraus entsteht ein fertiger

@@ -284,7 +284,7 @@ window.JASUVI_MENU = {
     ]}
   ],
 
-  suesses: [
+  dessert: [
     { title: "Dessert", items: [
       { id: "d1", name: "Daifuku Mochi", desc: "Rundes Mochi, gefüllt mit süßer roter Bohnenpaste", price: 8.5, veg: true },
       { id: "d2", name: "Bánh Chuối", desc: "Gedämpfter Klebreis mit Banane, roten Bohnen, Kokosmilch & Kokosraspeln", price: 6.5, veg: true },
@@ -292,6 +292,9 @@ window.JASUVI_MENU = {
       { id: "d4", name: "Bánh Rau Câu", desc: "Seetang-Dessert mit Kokosmilch, Kokosraspeln & frischen Kokosfasern — 100 % natürlich", price: 7.5, veg: true },
       { id: "d5", name: "Mochi-Eis", desc: "Drei verschiedene Eissorten im Reismehl-Mantel", price: 8.5, veg: true }
     ]},
+  ],
+
+  getraenke: [
     { title: "Softdrinks & Wasser", items: [
       { id: "g501", name: "Coca-Cola / Cola Light", desc: "0,2 l · 3,50 € — 0,4 l · 4,50 €", priceText: "3,50 / 4,50 €" },
       { id: "g502", name: "Fanta · Sprite", desc: "0,2 l · 3,50 € — 0,4 l · 4,50 €", priceText: "3,50 / 4,50 €" },
