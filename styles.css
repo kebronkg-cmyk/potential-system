@@ -347,31 +347,6 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .hero-rating .stars { font-size: 0.95rem; }
 .hero-rating strong { color: var(--paper); font-weight: 600; }
 
-.scroll-hint {
-  position: absolute; bottom: 2.4rem; left: 50%;
-  transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 0.55rem;
-  color: var(--paper-faint); font-size: 0.72rem;
-  letter-spacing: 0.28em; text-transform: uppercase;
-  transition: color 0.35s ease;
-}
-.scroll-hint:hover { color: var(--paper); }
-.scroll-hint-track {
-  width: 24px; height: 40px;
-  border: 1.5px solid currentColor; border-radius: 14px;
-  display: flex; justify-content: center; padding-top: 7px;
-}
-.scroll-hint-dot {
-  width: 4px; height: 8px; border-radius: 3px;
-  background: var(--gold);
-  animation: hint-drop 1.8s var(--ease-out) infinite;
-}
-@keyframes hint-drop {
-  0% { transform: translateY(0); opacity: 1; }
-  70% { transform: translateY(14px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 0; }
-}
-
 /* ═══════════ Marquee ═══════════ */
 .marquee {
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
