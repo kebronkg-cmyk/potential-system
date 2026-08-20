@@ -298,7 +298,7 @@
       if (moved || !plate) return;
       const i = Number(plate.dataset.index);
       // Teller vorne: Großansicht öffnen. Sonst erst nach vorne drehen.
-      if (i === frontIndex()) { openLightbox(i); return; }
+      if (i === frontIndex()) { openLightbox(i, kaitenDishes); return; }
       const target = -i * stepAngle;
       let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
       setBeltDir(delta);
@@ -653,29 +653,56 @@
      Zeigt das Foto des Gerichts groß als Teller, mit Beschreibung
      aus der Speisekarte und direktem Weg auf die Bestellkarte. */
   const lightbox = document.getElementById("lightbox");
-  let lbIndex = 0;
-  function openLightbox(i) {
-    if (!lightbox) return;
-    lbIndex = ((i % kaitenDishes.length) + kaitenDishes.length) % kaitenDishes.length;
-    const dish = kaitenDishes[lbIndex];
-    const entry = priceBook.get(dish.id);
-    // Beschreibung aus der Speisekarte nachschlagen
+
+  // Die Fotos der Galerie zeigen zum Teil Gerichte von der Karte. Wo eine
+  // Kennung hinterlegt ist, holt die Großansicht Name, Beschreibung und
+  // Preis von dort und bietet den Weg auf die Bestellkarte an.
+  const galleryItems = [...document.querySelectorAll(".gallery-item")].map((fig) => ({
+    id: fig.dataset.dish || null,
+    photo: fig.querySelector("img").getAttribute("src"),
+    name: fig.dataset.name || fig.querySelector("figcaption").textContent.trim(),
+    desc: fig.dataset.desc || "",
+    tag: fig.dataset.tag || ""
+  }));
+
+  const menuDesc = (id) => {
     let desc = "";
     Object.values(menuData).flat().forEach((group) => {
-      const hit = group.items.find((it) => it.id === dish.id);
+      const hit = group.items.find((it) => it.id === id);
       if (hit && hit.desc) desc = hit.desc;
     });
-    document.getElementById("lightboxImg").src = dish.photo;
-    document.getElementById("lightboxImg").alt = dish.name;
-    document.getElementById("lightboxTag").textContent = dish.tag;
-    document.getElementById("lightboxName").textContent = dish.name;
-    document.getElementById("lightboxDesc").textContent = desc;
-    document.getElementById("lightboxPrice").textContent = fmt(entry ? entry.price : dish.price);
+    return desc;
+  };
+
+  let lbItems = kaitenDishes; // aktive Bildreihe — Band oder Galerie
+  let lbIndex = 0;
+  function openLightbox(i, items) {
+    if (!lightbox) return;
+    if (items) lbItems = items;
+    const count = lbItems.length;
+    if (!count) return;
+    lbIndex = ((i % count) + count) % count;
+    const item = lbItems[lbIndex];
+    const entry = item.id ? priceBook.get(item.id) : null;
+    const price = entry ? entry.price : item.price;
+
+    document.getElementById("lightboxImg").src = item.photo;
+    document.getElementById("lightboxImg").alt = entry ? entry.name : item.name;
+    document.getElementById("lightboxTag").textContent = item.tag || "";
+    document.getElementById("lightboxName").textContent = entry ? entry.name : item.name;
+    document.getElementById("lightboxDesc").textContent = item.desc || (item.id ? menuDesc(item.id) : "");
+    const priceEl = document.getElementById("lightboxPrice");
+    priceEl.textContent = price != null ? fmt(price) : "";
+    priceEl.hidden = price == null;
+    // Ohne Kennung gibt es nichts zu bestellen — dann bleibt der Knopf weg.
+    document.getElementById("lightboxAdd").hidden = !item.id;
+
     lightbox.classList.add("is-open");
     lightbox.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     document.getElementById("lightboxClose").focus();
-    if (window.__kaitenGoTo) window.__kaitenGoTo(lbIndex);
+    // Nur wenn die Ansicht vom Band kommt, dreht das Band mit
+    if (lbItems === kaitenDishes && window.__kaitenGoTo) window.__kaitenGoTo(lbIndex);
   }
   function closeLightbox() {
     if (!lightbox) return;
@@ -689,8 +716,12 @@
     document.getElementById("lightboxNext").addEventListener("click", () => openLightbox(lbIndex + 1));
     lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
     document.getElementById("lightboxAdd").addEventListener("click", (e) => {
-      addToCart(kaitenDishes[lbIndex].id, e.currentTarget);
+      const item = lbItems[lbIndex];
+      if (item.id) addToCart(item.id, e.currentTarget);
       closeLightbox();
+    });
+    document.querySelectorAll(".gallery-zoom").forEach((btn, i) => {
+      btn.addEventListener("click", () => openLightbox(i, galleryItems));
     });
     window.addEventListener("keydown", (e) => {
       if (!lightbox.classList.contains("is-open")) return;
