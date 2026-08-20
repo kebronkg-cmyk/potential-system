@@ -15,7 +15,7 @@
      andere Nummer setzen. Das wird in der Bestellkarte deutlich angezeigt:
      ein untergeschobener Link darf die Vorbestellung mit Name und
      Rufnummer nicht unbemerkt woanders hin schicken. */
-  const WHATSAPP_HAUS = "498992740177"; // 089 9274 0177 international, ohne führende Null
+  const WHATSAPP_HAUS = "491601867778"; // 0160 1867778 international, ohne führende Null
   const waParam = (new URLSearchParams(location.search).get("wa") || "").replace(/\D/g, "");
   const WHATSAPP_TEST = /^\d{8,15}$/.test(waParam) ? waParam : null;
   const WHATSAPP = WHATSAPP_TEST || WHATSAPP_HAUS;
@@ -197,7 +197,6 @@
     function measure() {
       const plateSize = parseFloat(getComputedStyle(stage).getPropertyValue("--plate")) || 160;
       radius = Math.round(plateSize * 1.45);
-      stage.style.setProperty("--kr", `${radius}px`); // die Bandbahn folgt demselben Radius
     }
     measure();
     window.addEventListener("resize", () => { measure(); updateKaiten(false); });
@@ -230,7 +229,33 @@
     }
     updateKaiten(false);
 
-    const rotateKaiten = (dir) => { ringAngle += dir * stepAngle; updateKaiten(); };
+    /* Das Band trägt die Teller — es muss in dieselbe Richtung laufen wie
+       sie. Der Versatz wird selbst fortgeschrieben statt per CSS-Animation:
+       ein Richtungswechsel würde dort mitten im Lattenmuster springen. */
+    const beltSlats = document.querySelector(".kaiten-belt-slats");
+    let beltDir = -1; // -1 = Teller wandern nach links (Vorwärtslauf)
+    const setBeltDir = (d) => { if (d) beltDir = d > 0 ? 1 : -1; };
+    if (beltSlats && !prefersReducedMotion) {
+      const PERIOD = 34;  // Lattenbreite aus styles.css
+      const SPEED = 16;   // Pixel pro Sekunde
+      let offset = 0, last = 0, raf = 0;
+      beltSlats.style.animation = "none"; // ab hier übernimmt die Schleife
+      const step = (now) => {
+        if (last) {
+          offset = (offset + beltDir * SPEED * (now - last) / 1000) % PERIOD;
+          beltSlats.style.transform = `translateX(${offset.toFixed(2)}px)`;
+        }
+        last = now;
+        raf = requestAnimationFrame(step);
+      };
+      // Außerhalb des Sichtfelds nicht weiterrechnen
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !raf) { last = 0; raf = requestAnimationFrame(step); }
+        else if (!entry.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; }
+      }, { threshold: 0 }).observe(stage);
+    }
+
+    const rotateKaiten = (dir) => { setBeltDir(dir); ringAngle += dir * stepAngle; updateKaiten(); };
     // Ring dreht um Y: ein wachsender Winkel holt den vorherigen Teller nach vorn
     document.getElementById("kaitenPrev").addEventListener("click", () => rotateKaiten(1));
     document.getElementById("kaitenNext").addEventListener("click", () => rotateKaiten(-1));
@@ -242,7 +267,9 @@
       if (!dragging) return;
       const dx = x - dragStartX;
       if (Math.abs(dx) > 4) moved = true;
-      ringAngle = dragStartAngle + dx * 0.25;
+      const nextAngle = dragStartAngle + dx * 0.25;
+      setBeltDir(nextAngle - ringAngle); // Band folgt der Zugrichtung
+      ringAngle = nextAngle;
       updateKaiten(false);
     };
     const dragEnd = () => {
@@ -274,6 +301,7 @@
       if (i === frontIndex()) { openLightbox(i); return; }
       const target = -i * stepAngle;
       let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
+      setBeltDir(delta);
       ringAngle += delta;
       updateKaiten();
     });
@@ -281,6 +309,7 @@
     window.__kaitenGoTo = (i) => {
       const target = -i * stepAngle;
       let delta = ((target - ringAngle) % 360 + 540) % 360 - 180;
+      setBeltDir(delta);
       ringAngle += delta;
       updateKaiten();
     };
