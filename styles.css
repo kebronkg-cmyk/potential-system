@@ -23,6 +23,10 @@
   --header-h: 92px;
   /* Seigaiha (青海波) — traditionelles Wellenmuster als goldenes Ornament */
   --seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cg fill='none' stroke='%23e0bd6b' stroke-opacity='.45' stroke-width='1'%3E%3Ccircle cx='0' cy='20' r='19'/%3E%3Ccircle cx='0' cy='20' r='13'/%3E%3Ccircle cx='0' cy='20' r='7'/%3E%3Ccircle cx='40' cy='20' r='19'/%3E%3Ccircle cx='40' cy='20' r='13'/%3E%3Ccircle cx='40' cy='20' r='7'/%3E%3Ccircle cx='80' cy='20' r='19'/%3E%3Ccircle cx='80' cy='20' r='13'/%3E%3Ccircle cx='80' cy='20' r='7'/%3E%3Ccircle cx='20' cy='40' r='19'/%3E%3Ccircle cx='20' cy='40' r='13'/%3E%3Ccircle cx='20' cy='40' r='7'/%3E%3Ccircle cx='60' cy='40' r='19'/%3E%3Ccircle cx='60' cy='40' r='13'/%3E%3Ccircle cx='60' cy='40' r='7'/%3E%3C/g%3E%3C/svg%3E");
+  /* Lotus (蓮) — gedämpftes Rosé, damit es neben dem Gold nicht schreit */
+  --lotus: #dba3aa;
+  --lotus-mark: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 92' fill='none' stroke='%23dba3aa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M70 15 C84 33 85 57 70 77 C55 57 56 33 70 15Z'/><path d='M70 77 C51 72 37 57 35 35 C53 42 65 57 70 77Z'/><path d='M70 77 C89 72 103 57 105 35 C87 42 75 57 70 77Z'/><path d='M70 79 C44 78 21 69 10 52 C35 48 59 58 70 79Z'/><path d='M70 79 C96 78 119 69 130 52 C105 48 81 58 70 79Z'/><path d='M25 84 C43 90 97 90 115 84'/></svg>");
+  --petal: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 52'><path d='M22 4 C31 16 31 34 22 47 C13 34 13 16 22 4Z' fill='%23dba3aa' fill-opacity='.72' stroke='%23dba3aa' stroke-width='1.8' stroke-linejoin='round'/></svg>");
   /* Goldene Linien-Berge — Motiv der letzten Speisekarten-Seite */
   --mountains: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23e0bd6b' stroke-width='1.1' stroke-linejoin='round'%3E%3Cpath d='M0 200 L90 92 L150 138 L232 46 L300 116 L372 62 L452 140 L512 96 L600 200' stroke-opacity='.55'/%3E%3Cpath d='M0 200 L70 126 L142 168 L226 96 L296 150 L368 108 L444 172 L520 134 L600 200' stroke-opacity='.38'/%3E%3Cpath d='M0 200 L60 158 L136 186 L220 138 L292 178 L364 146 L440 190 L516 164 L600 200' stroke-opacity='.24'/%3E%3C/g%3E%3C/svg%3E");
 }
@@ -358,6 +362,76 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .hero-rating:hover { border-color: var(--gold); background: rgba(224, 189, 107, 0.12); transform: translateY(-2px); }
 .hero-rating .stars { font-size: 0.95rem; }
 .hero-rating strong { color: var(--paper); font-weight: 600; }
+
+/* ═══════════ Lotus (蓮) ═══════════
+   Das Rosé tritt nie als Textfarbe auf, nur als Ornament — so bleibt die
+   Gold-Schwarz-Ordnung bestehen und der Lotus setzt einen warmen Akzent. */
+
+/* Treibende Blütenblätter im Hero */
+.petals {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.petal {
+  position: absolute; top: 0; left: var(--x);
+  width: calc(17px * var(--s)); height: calc(22px * var(--s));
+  animation: petal-fall var(--d) linear var(--delay) infinite;
+}
+.petal::before {
+  content: ""; display: block; width: 100%; height: 100%;
+  background: var(--petal) center / contain no-repeat;
+  /* Ohne eigenen Schatten verschwinden die Blätter über den hellen
+     Stellen der Fotos — mit ihm lesen sie sich auf jedem Grund. */
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+  animation: petal-sway calc(var(--d) / 3.5) ease-in-out var(--delay) infinite;
+}
+@keyframes petal-fall {
+  0%   { transform: translate3d(0, -10vh, 0); opacity: 0; }
+  9%   { opacity: 0.5; }
+  88%  { opacity: 0.36; }
+  100% { transform: translate3d(var(--drift), 104vh, 0); opacity: 0; }
+}
+@keyframes petal-sway {
+  0%, 100% { transform: translateX(-1.4vw) rotate(-26deg); }
+  50%      { transform: translateX(1.4vw) rotate(22deg); }
+}
+/* Ohne Bewegung wären es nur Krümel im Bild */
+@media (prefers-reduced-motion: reduce) { .petals { display: none; } }
+
+/* Teiler: eine Blüte zwischen zwei Haarlinien */
+.lotus-divider {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  padding: clamp(2.6rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 5rem) 0;
+  max-width: 900px; margin-inline: auto;
+}
+.lotus-rule {
+  flex: 1; height: 1px; max-width: 220px;
+  background: linear-gradient(90deg, transparent, rgba(219, 163, 170, 0.34), transparent);
+}
+.lotus-mark {
+  flex: none;
+  width: 54px; height: 36px;
+  background: var(--lotus-mark) center / contain no-repeat;
+  opacity: 0.85;
+}
+
+/* Großes Wasserzeichen hinter der Philosophie */
+.philosophy { position: relative; overflow: hidden; }
+.philosophy-lotus {
+  position: absolute; left: 50%; bottom: -14%;
+  width: min(120vw, 1180px); aspect-ratio: 140 / 92;
+  transform: translateX(-50%);
+  background: var(--lotus-mark) center / contain no-repeat;
+  opacity: 0.055;
+  pointer-events: none;
+}
+.philosophy .section-head,
+.philosophy-grid { position: relative; }
+
+.cart-empty-lotus { display: block; margin-inline: auto; }
 
 /* ═══════════ Marquee ═══════════ */
 .marquee {

@@ -73,6 +73,19 @@
         <span class="hero-glow"></span>
       </div>
 
+      <!-- Ein paar Lotusblätter, die durchs Bild treiben — sehr leise,
+           damit sie Atmosphäre stiften statt abzulenken. -->
+      <div class="petals" aria-hidden="true">
+        <span class="petal" style="--x:6%;--d:26s;--delay:-3s;--s:0.8;--drift:7vw"></span>
+        <span class="petal" style="--x:17%;--d:33s;--delay:-12s;--s:0.55;--drift:-5vw"></span>
+        <span class="petal" style="--x:29%;--d:29s;--delay:-20s;--s:0.95;--drift:9vw"></span>
+        <span class="petal" style="--x:41%;--d:37s;--delay:-7s;--s:0.65;--drift:-8vw"></span>
+        <span class="petal" style="--x:56%;--d:27s;--delay:-16s;--s:0.85;--drift:6vw"></span>
+        <span class="petal" style="--x:68%;--d:34s;--delay:-25s;--s:0.6;--drift:-6vw"></span>
+        <span class="petal" style="--x:79%;--d:30s;--delay:-9s;--s:1.0;--drift:8vw"></span>
+        <span class="petal" style="--x:91%;--d:36s;--delay:-19s;--s:0.7;--drift:-7vw"></span>
+      </div>
+
       <div class="hero-content">
         <img class="hero-logo" src="img/logo-hero.png" alt="JaSuVi" width="731" height="400">
         <p class="hero-eyebrow reveal-up"><span class="eyebrow-dot"></span>Japanische Küche &amp; Asian Fusion · München-Pasing</p>
@@ -270,8 +283,16 @@
       </div>
     </section>
 
+    <!-- ══════════ Lotus-Teiler ══════════ -->
+    <div class="lotus-divider reveal-up" aria-hidden="true">
+      <span class="lotus-rule"></span>
+      <span class="lotus-mark"></span>
+      <span class="lotus-rule"></span>
+    </div>
+
     <!-- ══════════ Philosophie / Über uns ══════════ -->
     <section class="philosophy section" id="philosophie">
+      <span class="philosophy-lotus" aria-hidden="true"></span>
       <div class="section-head">
         <p class="section-eyebrow reveal-up"><span class="eyebrow-dot"></span>Über uns</p>
         <h2 class="section-title split-lines">
@@ -391,11 +412,15 @@
     </header>
 
     <div class="cart-empty" id="cartEmpty">
-      <svg viewBox="0 0 120 120" width="110" height="110" aria-hidden="true">
-        <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="2" stroke-dasharray="4 7"/>
-        <g opacity=".55">
-          <circle cx="60" cy="60" r="26" fill="none" stroke="currentColor" stroke-width="2"/>
-          <circle cx="60" cy="60" r="10" fill="currentColor" fill-opacity=".35"/>
+      <svg class="cart-empty-lotus" viewBox="0 0 140 130" width="126" height="117" aria-hidden="true">
+        <circle cx="70" cy="66" r="56" fill="none" stroke="currentColor" stroke-opacity=".16" stroke-width="2" stroke-dasharray="4 7"/>
+        <g fill="none" stroke="var(--lotus)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".72" transform="translate(14 26) scale(0.8)">
+          <path d="M70 15 C84 33 85 57 70 77 C55 57 56 33 70 15Z"/>
+          <path d="M70 77 C51 72 37 57 35 35 C53 42 65 57 70 77Z"/>
+          <path d="M70 77 C89 72 103 57 105 35 C87 42 75 57 70 77Z"/>
+          <path d="M70 79 C44 78 21 69 10 52 C35 48 59 58 70 79Z"/>
+          <path d="M70 79 C96 78 119 69 130 52 C105 48 81 58 70 79Z"/>
+          <path d="M25 84 C43 90 97 90 115 84" stroke-opacity=".5"/>
         </g>
       </svg>
       <p>Ihre Bestellkarte ist noch leer.</p>
