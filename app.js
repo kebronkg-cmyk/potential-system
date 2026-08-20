@@ -236,8 +236,8 @@
     let beltDir = -1; // -1 = Teller wandern nach links (Vorwärtslauf)
     const setBeltDir = (d) => { if (d) beltDir = d > 0 ? 1 : -1; };
     if (beltSlats && !prefersReducedMotion) {
-      const PERIOD = 34;  // Lattenbreite aus styles.css
-      const SPEED = 16;   // Pixel pro Sekunde
+      const PERIOD = 34;          // Lattenbreite aus styles.css
+      const SPEED = PERIOD / 2.1; // exakt das Tempo der früheren CSS-Animation
       let offset = 0, last = 0, raf = 0;
       beltSlats.style.animation = "none"; // ab hier übernimmt die Schleife
       const step = (now) => {
